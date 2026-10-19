@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "surfaces": [
+    "ui"
+  ],
+  "ui_kind": "web",
+  "track": "brownfield",
+  "tier": "L",
+  "tier_source": "owner",
+  "risk_flags": {
+    "sensitive_data": false,
+    "regulated": false,
+    "multi_repo": false,
+    "backend_dependencies": true
+  },
+  "contracts": [
+    {
+      "surface": "ui",
+      "contract": "Mockup atlas: design/atlas/ (source design/atlas-src/)",
+      "gate": "Screenshot parity by an independent reviewer (design/parity/NNN.md)",
+      "e2e": "Device or browser E2E on staging (Maestro, XCUITest, Espresso or Playwright)"
+    }
+  ],
+  "phases": {
+    "assess": {
+      "status": "on",
+      "skill": "assess",
+      "why": "always first"
+    },
+    "bootstrap": {
+      "status": "on",
+      "skill": "bootstrap-brownfield",
+      "why": "tier L sets the project up from scratch"
+    },
+    "setup": {
+      "status": "on",
+      "skill": "bootstrap-brownfield",
+      "why": "instructions, tracker and .env"
+    },
+    "capture-before": {
+      "status": "on",
+      "skill": "capture-before",
+      "why": "brownfield UI: screenshots of today's app"
+    },
+    "research": {
+      "status": "on",
+      "skill": "atlas",
+      "why": "research and review before the contract"
+    },
+    "contract": {
+      "status": "on",
+      "skill": "atlas",
+      "why": "UI: the atlas is the contract",
+      "with": "Mockup atlas"
+    },
+    "decisions": {
+      "status": "on",
+      "skill": "decisions",
+      "why": "decisions, open questions, glossary, discrepancies"
+    },
+    "backend-split": {
+      "status": "on",
+      "skill": "backend-split",
+      "why": "a client depends on a backend"
+    },
+    "constitution": {
+      "status": "on",
+      "skill": "constitution",
+      "why": "principles for a large piece of work"
+    },
+    "architecture": {
+      "status": "on",
+      "skill": "architecture",
+      "why": "graph and diagrams"
+    },
+    "specs": {
+      "status": "on",
+      "skill": "specify-from-atlas",
+      "why": "one spec per feature, citing contract ids",
+      "with": "Mockup atlas"
+    },
+    "verify-specs": {
+      "status": "on",
+      "skill": "verify-specs",
+      "why": "coverage and cross-references"
+    },
+    "plans": {
+      "status": "on",
+      "skill": "plan-and-tasks",
+      "why": "plan grounded in code, tasks by session"
+    },
+    "sessions": {
+      "status": "on",
+      "skill": "sessionize",
+      "why": "many sessions"
+    },
+    "tracker": {
+      "status": "on",
+      "skill": "jira-sync",
+      "why": "tickets and links"
+    },
+    "execution": {
+      "status": "on",
+      "skill": "run-session",
+      "why": "test-first, three layers, evidence, ask before commit"
+    },
+    "verification": {
+      "status": "on",
+      "skill": "parity-review",
+      "why": "independent check of built output against the contract",
+      "with": "Screenshot parity by an independent reviewer (design/parity/NNN.md)"
+    },
+    "wave-close": {
+      "status": "on",
+      "skill": "wave-close",
+      "why": "after each wave"
+    },
+    "learning": {
+      "status": "on",
+      "skill": "wave-close",
+      "why": "every miss becomes a rule"
+    }
+  },
+  "evidence": {
+    "ui": [
+      "package.json: react",
+      "package.json: react-dom",
+      "file: src/App.jsx"
+    ]
+  }
+}

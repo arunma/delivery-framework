@@ -1,0 +1,16 @@
+# Sign in with the synthetic staging account. Credentials arrive with -e (see e2e.sh).
+appId: <APP_ID>
+---
+- tapOn:
+    id: "<signin_email_field>"
+- inputText: ${APP_EMAIL}
+- tapOn:
+    id: "<signin_password_field>"
+- inputText: ${APP_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: "<signin_submit>"
+- extendedWaitUntil:
+    visible:
+      id: "<home_root>"
+    timeout: 20000

@@ -1,0 +1,48 @@
+# .graphifyignore — what stays out of the code graph. Copy to the repo root as .graphifyignore.
+# graphify also honours .gitignore. Same pattern syntax as .gitignore. Adapt to the stack.
+
+# Secrets and credentials (never in the graph, never in GRAPH_REPORT.md)
+.env
+.env.*
+!.env.example
+**/.env.local
+*.pem
+*.key
+*.p12
+*.keystore
+**/secrets/
+
+# Generated code (regenerated from sources the graph already covers)
+**/*.g.dart
+**/*.freezed.dart
+**/*.pb.go
+**/*_pb2.py
+**/*.generated.*
+**/generated/
+
+# Mocks and fixtures
+**/*.mocks.dart
+**/__mocks__/
+**/mocks/
+**/fixtures/
+
+# Build output, dependencies and caches
+build/
+dist/
+out/
+target/
+coverage/
+node_modules/
+.venv/
+__pycache__/
+.dart_tool/
+ios/Pods/
+android/.gradle/
+.gradle/
+
+# Design artefacts (rendered mockups, screenshots, the atlas output and its generator)
+design/
+
+# The graph itself and backups
+graphify-out/
+backups/

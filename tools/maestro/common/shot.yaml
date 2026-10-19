@@ -1,0 +1,9 @@
+# Screenshot the current screen under its atlas screen id, for the parity round.
+#   - runFlow:
+#       file: common/shot.yaml
+#       env:
+#         SCREEN_ID: 07-item-actions
+appId: <APP_ID>
+---
+- waitForAnimationToEnd
+- takeScreenshot: design/app/${SCREEN_ID}

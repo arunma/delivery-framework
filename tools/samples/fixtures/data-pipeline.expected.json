@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "surfaces": [
+    "data"
+  ],
+  "ui_kind": null,
+  "track": "brownfield",
+  "tier": "L",
+  "tier_source": "owner",
+  "risk_flags": {
+    "sensitive_data": false,
+    "regulated": false,
+    "multi_repo": false,
+    "backend_dependencies": false
+  },
+  "contracts": [
+    {
+      "surface": "data",
+      "contract": "Data contract: contracts/data/ (schemas, data dictionary, Mermaid lineage, SLAs, freshness)",
+      "gate": "Output equals the committed answer key; data-quality checks pass; a second run reproduces it",
+      "e2e": "Pipeline run on the golden dataset (synthetic data only)"
+    }
+  ],
+  "phases": {
+    "assess": {
+      "status": "on",
+      "skill": "assess",
+      "why": "always first"
+    },
+    "bootstrap": {
+      "status": "on",
+      "skill": "bootstrap-brownfield",
+      "why": "tier L sets the project up from scratch"
+    },
+    "setup": {
+      "status": "on",
+      "skill": "bootstrap-brownfield",
+      "why": "instructions, tracker and .env"
+    },
+    "capture-before": {
+      "status": "swapped",
+      "skill": "capture-before",
+      "why": "brownfield: baseline per surface",
+      "with": "Today's outputs on the golden dataset, kept as the first answer key"
+    },
+    "research": {
+      "status": "on",
+      "skill": "contract",
+      "why": "research and review before the contract"
+    },
+    "contract": {
+      "status": "swapped",
+      "skill": "contract",
+      "why": "the contract artefact is the source of truth",
+      "with": "Data contract"
+    },
+    "decisions": {
+      "status": "on",
+      "skill": "decisions",
+      "why": "decisions, open questions, glossary, discrepancies"
+    },
+    "backend-split": {
+      "status": "off",
+      "skill": "backend-split",
+      "why": "no client-to-backend dependency found"
+    },
+    "constitution": {
+      "status": "on",
+      "skill": "constitution",
+      "why": "principles for a large piece of work"
+    },
+    "architecture": {
+      "status": "on",
+      "skill": "architecture",
+      "why": "graph and diagrams"
+    },
+    "specs": {
+      "status": "on",
+      "skill": "specify-from-atlas",
+      "why": "one spec per feature, citing contract ids",
+      "with": "Data contract"
+    },
+    "verify-specs": {
+      "status": "on",
+      "skill": "verify-specs",
+      "why": "coverage and cross-references"
+    },
+    "plans": {
+      "status": "on",
+      "skill": "plan-and-tasks",
+      "why": "plan grounded in code, tasks by session"
+    },
+    "sessions": {
+      "status": "on",
+      "skill": "sessionize",
+      "why": "many sessions"
+    },
+    "tracker": {
+      "status": "on",
+      "skill": "jira-sync",
+      "why": "tickets and links"
+    },
+    "execution": {
+      "status": "on",
+      "skill": "run-session",
+      "why": "test-first, three layers, evidence, ask before commit"
+    },
+    "verification": {
+      "status": "swapped",
+      "skill": "parity-review",
+      "why": "independent check of built output against the contract",
+      "with": "Output equals the committed answer key"
+    },
+    "wave-close": {
+      "status": "on",
+      "skill": "wave-close",
+      "why": "after each wave"
+    },
+    "learning": {
+      "status": "on",
+      "skill": "wave-close",
+      "why": "every miss becomes a rule"
+    }
+  },
+  "evidence": {
+    "data": [
+      "requirements.txt: dbt-core",
+      "requirements.txt: duckdb",
+      "file: dbt_project.yml",
+      "file: models/daily_orders.sql"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "git_guard": {
+    "enabled": true,
+    "approval_file": ".delivery/APPROVED",
+    "approval_ttl_minutes": 15,
+    "env_flag": "DELIVERY_ALLOW_GIT"
+  },
+  "secrets_guard": {
+    "enabled": true,
+    "read_mode": "ask"
+  },
+  "prod_guard": {
+    "enabled": false,
+    "patterns": ["--flavor[= ]prod\\b", "https://api\\.example\\.com", "\\bprod(uction)?\\.example\\.com\\b"],
+    "mode": "ask"
+  },
+  "session_start": {
+    "enabled": true,
+    "docs": ["ARCHITECTURE-PROMPT.md", "docs/RESTART.md"],
+    "max_lines": 60,
+    "graph": true
+  }
+}

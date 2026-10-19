@@ -1,0 +1,16 @@
+{
+  "name": "delivery-framework",
+  "description": "The delivery framework plugin: assess, contract, specify, plan, sessionize and run agent sessions with evidence.",
+  "owner": {
+    "name": "Delivery framework contributors"
+  },
+  "plugins": [
+    {
+      "name": "delivery",
+      "source": "./",
+      "description": "Phase skills, commands, reviewer subagents and guard hooks for the delivery framework.",
+      "category": "workflow",
+      "tags": ["delivery", "spec-driven", "sessions"]
+    }
+  ]
+}

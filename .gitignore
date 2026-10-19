@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python and Node
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+
+# Generated output
+tools/atlas-starter/out/
+out/
+jira-map.json
+
+# Code graph: only the report is committed
+graphify-out/*
+!graphify-out/GRAPH_REPORT.md
+
+.DS_Store

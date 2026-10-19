@@ -1,0 +1,8 @@
+[
+ {"id": "B1", "title": "Change feed for sync (list changes since a cursor)", "kind": "task", "epic": null,
+  "fallback": "Full re-list on every sync, paged", "sessions": ["S01", "S02"], "labels": ["backend"]},
+ {"id": "BUG-1", "title": "Share list returns a zero id for every row", "kind": "bug", "epic": null,
+  "fallback": "Match shares by document id and created time", "sessions": ["S02"], "labels": ["backend"]},
+ {"id": "DEC-1", "title": "Where labels live: encrypted client manifest or server metadata", "kind": "decision",
+  "epic": null, "fallback": null, "sessions": [], "labels": []}
+]

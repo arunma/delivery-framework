@@ -1,0 +1,38 @@
+# Capture the "before" screens of today's app, light mode, named by screen id.
+#
+# Preconditions:
+#   - a STAGING build. If the app blocks capture or hides its accessibility tree, build it with the
+#     project's test-only capture switch (a no-op in production), e.g.
+#       --dart-define=<CAPTURE_SWITCH>=true   (Flutter; use the platform's equivalent)
+#   - the synthetic account seeded per design/seed.md (never real data)
+#   - simulator in light appearance; run from the repo root
+#   - credentials passed with -e, through the wrapper:
+#       tools/maestro/e2e.sh .maestro/screenshots/capture_before.yaml
+# Open every PNG afterwards. A blank, spinner, error or wrong-screen capture does not count.
+# A screen that cannot be reached goes in design/before/MISSING.md with the reason.
+appId: <APP_ID>
+---
+- launchApp
+- runFlow:
+    when:
+      visible:
+        id: "<signin_email_field>"
+    file: common/login.yaml
+
+# 01 Home
+- tapOn:
+    id: "<tab_home>"
+- waitForAnimationToEnd
+- takeScreenshot: design/before/01-home
+
+# 02 List
+- tapOn:
+    id: "<tab_list>"
+- waitForAnimationToEnd
+- takeScreenshot: design/before/02-list
+
+# 03 Detail: open the first row
+- tapOn:
+    id: "<list_row_0>"
+- waitForAnimationToEnd
+- takeScreenshot: design/before/03-detail

@@ -1,0 +1,115 @@
+# EXAMPLE FOR THE PILOT. Copy to .github/workflows/delivery-session.yml in the PROJECT repo (not this
+# one), read every line, and adapt it. It has not been run against your repository.
+#
+# What it does: when an issue gets the label `delivery:ready` (or someone runs it by hand with a
+# session id), it checks out a branch named after the ticket key, runs the delivery plugin's
+# run-session skill headless with Claude Code, commits whatever the session STAGED to that branch,
+# and opens a pull request. Claude never commits or pushes: the plugin's git guard blocks it. The
+# workflow commits on the owner's behalf only to a review branch, and the pull request is the
+# owner's approval step. Nothing merges automatically.
+#
+# Never point this at production. The runner gets staging configuration and synthetic test
+# accounts only; production secrets must not exist in this repository's Actions secrets.
+#
+# Secrets (Settings → Secrets and variables → Actions). Placeholders only; never commit values:
+#   ANTHROPIC_API_KEY        Claude API key (or use CLAUDE_CODE_OAUTH_TOKEN with the
+#                            claude_code_oauth_token input instead)
+#   JIRA_SITE, JIRA_USER, JIRA_TOKEN   optional; without them the session records Jira as NOT RUN
+#   STAGING_*                optional; staging-only settings your integration tests need
+#
+# Issue convention: the title starts with the session id and contains the ticket key, e.g.
+#   "S03 · A person can export a list · ABC-42"
+# Ids are validated against a strict pattern before use; issue text is never interpolated into a
+# shell command.
+
+name: delivery-session
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      session_id:
+        description: "Session id from SESSIONS.md (e.g. S03), or a ticket key for a tier-S change"
+        required: true
+      ticket_key:
+        description: "Tracker key (e.g. ABC-42); used for the branch name"
+        required: true
+
+concurrency:
+  group: delivery-session-${{ github.event.issue.number || github.event.inputs.session_id }}
+  cancel-in-progress: false
+
+jobs:
+  session:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'delivery:ready'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # Least privilege for this job: push the branch, open the PR, comment on the issue.
+    # id-token: write is required by claude-code-action's default GitHub App authentication.
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    env:
+      ISSUE_TITLE: ${{ github.event.issue.title }}
+      IN_SESSION: ${{ github.event.inputs.session_id }}
+      IN_KEY: ${{ github.event.inputs.ticket_key }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Resolve session id, ticket key and branch
+        id: ids
+        run: |
+          set -eu
+          if [ -n "${IN_SESSION:-}" ]; then
+            sid="$IN_SESSION"; key="$IN_KEY"
+          else
+            sid=$(printf '%s' "$ISSUE_TITLE" | sed -n 's/^\([A-Za-z][A-Za-z0-9·]*\) · .*/\1/p')
+            key=$(printf '%s' "$ISSUE_TITLE" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' | tail -1 || true)
+          fi
+          printf '%s' "$sid" | grep -qE '^[A-Za-z][A-Za-z0-9·]{0,20}$' || { echo "bad session id"; exit 1; }
+          printf '%s' "$key" | grep -qE '^[A-Z][A-Z0-9]+-[0-9]+$' || { echo "bad ticket key"; exit 1; }
+          echo "sid=$sid" >> "$GITHUB_OUTPUT"
+          echo "key=$key" >> "$GITHUB_OUTPUT"
+          echo "branch=feat/$key-session-$(printf '%s' "$sid" | tr -cd 'A-Za-z0-9' | tr 'A-Z' 'a-z')" >> "$GITHUB_OUTPUT"
+
+      - name: Create the session branch
+        run: git checkout -b "${{ steps.ids.outputs.branch }}"
+
+      - name: Run the session headless
+        uses: anthropics/claude-code-action@v1
+        env:
+          JIRA_SITE: ${{ secrets.JIRA_SITE }}
+          JIRA_USER: ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          plugin_marketplaces: "https://github.com/arunma/delivery-framework.git"
+          plugins: "delivery@delivery-framework"
+          prompt: "/delivery:session ${{ steps.ids.outputs.sid }} --ci"
+          # Adapt the allowed tools to the project's test, lint and build commands. git commit and
+          # git push are blocked by the plugin's git guard regardless.
+          claude_args: |
+            --max-turns 200
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(git status*),Bash(git diff*),Bash(git add*),Bash(python3 *),Bash(graphify *),Bash(make *),Bash(npm test*),Bash(pytest*)"
+
+      - name: Commit the staged work to the session branch and open a pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          if git diff --cached --quiet; then
+            echo "The session staged nothing; no pull request." ; exit 0
+          fi
+          git config user.name "delivery-session-bot"
+          git config user.email "delivery-session-bot@users.noreply.github.com"
+          git commit -m "${{ steps.ids.outputs.key }}: session ${{ steps.ids.outputs.sid }} (staged by the delivery session; review before merge)"
+          git push -u origin "${{ steps.ids.outputs.branch }}"
+          gh pr create --draft --base "${{ github.event.repository.default_branch }}" \
+            --head "${{ steps.ids.outputs.branch }}" \
+            --title "${{ steps.ids.outputs.key }}: session ${{ steps.ids.outputs.sid }}" \
+            --body "Draft opened by the delivery-session workflow (pilot). The session report is in the workflow run log. A person reviews the evidence, the verification file and the diff before marking it ready."
