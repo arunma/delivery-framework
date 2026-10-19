@@ -1,178 +1,128 @@
 # Pilot guide
 
-How a team tries the delivery plugin for three weeks and decides, with numbers, whether to keep it.
-Read [README.md](README.md) for what the plugin is and [FRAMEWORK.md](FRAMEWORK.md) for the phases.
+How a team tries the plugin for three weeks and decides, with numbers, whether to keep it. Read
+[README.md](README.md) first.
 
-## Step 0: assess
+## 1. Decide what success means
 
-Every pilot starts with `/delivery:start`, which assesses the repo before anything runs. The profile
-decides which contract plays the atlas's role and which gate plays parity's role, so a data or
-backend pilot never draws screens:
+Before week 1, write your bars in `pilot/LOG.md` (copy [templates/pilot-LOG.md](templates/pilot-LOG.md)).
+Every number links to a ticket, a PR or a file.
 
-| Surface | Contract artefact | Verification gate | E2E / integration |
-| --- | --- | --- | --- |
-| UI | Mockup atlas | Screenshot parity, independent reviewer | Device or browser E2E on staging |
-| API / service | OpenAPI, AsyncAPI or protobuf + sequences | Contract and consumer-driven tests, contract diff | API tests, ephemeral or staging env |
-| Data / pipeline | Data contract + golden dataset with answer key | Output equals the answer key; quality checks; reproducible | Pipeline run on the golden dataset |
-| CLI / library | Public API surface + usage examples | Doctests, golden CLI output, semver check | Golden CLI runs |
-| Infra | Architecture diagram + IaC plan | Plan diff, policy checks (plan only) | Plan against a sandbox |
-| ML / model | Eval set + answer key + decision rule | Scores meet the rule on named hardware | Eval harness |
+| Measure | How | Suggested bar |
+| --- | --- | --- |
+| Cycle time: ticket started → PR ready | Tracker timestamps | No worse than comparable past work |
+| Rework: sessions that needed a second go | Count in the log | At most 1 in 3 |
+| Check passed first time (no open rows) | `design/parity/*.md`, `verification/*.md` | At least half by week 2 |
+| PRs a person had to fix before merge | PR history | Falling week on week |
+| Sessions that fit in one context | Count in the log | At least 70% |
+| Guard incidents (a commit, push, `.env` write or production command got through) | Log | 0 |
 
-```mermaid
-flowchart LR
-  S["/delivery:start"] --> A["assess + tiering"] --> P[".delivery/profile.json"]
-  P -->|"UI"| U["atlas → parity"]
-  P -->|"API"| I["API contract → contract diff"]
-  P -->|"Data"| D["data contract → answer key"]
-  P -->|"CLI, infra, ML"| O["surface doc, plan, eval set → their gates"]
-```
+## 2. Pick the project and the slice
 
-A mixed project (a UI app with its own backend) runs both rows.
+- A project the team knows, with a staging environment and a way to load synthetic data.
+- Two or three low-risk sessions from one feature: no auth, payment or encryption changes. Medium
+  size is the usual fit; one small ticket is a good warm-up.
+- If you can, pilot two projects: one app and one API or data pipeline, so both kinds of check get
+  tried.
+- Avoid a deadline-critical release, sensitive or regulated data, or a repo with no tests (add a test
+  harness first, as its own ticket).
 
-## 1. Goals and success metrics
+## 3. What you need
 
-The pilot answers one question: **does the framework ship correct work faster, with less rework,
-without weakening any guard?** Decide the thresholds before week 1 and write them in `pilot/LOG.md`.
+- Claude Code (built and checked on 2.1.285) and the plugin ([install](README.md#install));
+  `/delivery:` should autocomplete.
+- Python 3.9+. Optional: graphify and archify (`tools/setup-tools.sh`, installs globally, read it
+  first), Mermaid CLI (`mmdc`), spec-kit for medium and large work. Without them, sessions mark those
+  checks NOT RUN.
+- Tracker credentials in the project's gitignored `.env`; never pasted into a chat or a ticket.
+- Staging and synthetic accounts only. No production URL or credential on a pilot machine; list
+  production patterns in `.delivery/guards.json` so the guard catches them.
+- Somewhere to run end-to-end checks: a simulator or device (apps), an ephemeral environment (APIs),
+  a local warehouse such as DuckDB (data).
 
-| Metric | Definition | How to measure | Suggested bar to continue |
-| --- | --- | --- | --- |
-| Cycle time | Ticket *In Progress* → PR ready for review | Tracker timestamps | Equal to or better than the team's last comparable work |
-| Rework rate | Sessions that needed a re-entry (13c) or a second PR to finish | Count in the log | ≤ 1 in 3 sessions |
-| Verification first-pass rate | Verification files (parity, contract diff, answer key) with no Open row after the first review | `design/parity/*.md`, `verification/*.md` | ≥ 50% by week 2 |
-| Human-fix rate on PRs | PRs where a person had to change code before merge, and the lines they changed | PR history | Falling week on week |
-| Sessions within one context | Sessions that finished without a HANDOFF to a second context | Count in the log | ≥ 70% |
-| Guard incidents | A commit, push, `.env` write or production command that got past a guard | Log; should be zero | 0 |
+## 4. Who
 
-Record evidence, not impressions: every number links to a ticket, a PR or a file.
-
-## 2. Choose the pilot project and slice
-
-- **A brownfield app the team knows**, with a staging environment and a way to load synthetic data.
-- **Two or three low-risk, well-specified sessions**: one slice of one feature, no auth, payment or
-  encryption changes, no backend change without a client fallback. Tier M is the usual fit; one
-  tier-S ticket is a good warm-up.
-- **If you can, run two pilots side by side: one UI project and one data or backend project.** The
-  framework adapts by surface (Step 0, assess). Piloting only a UI app leaves the contract-diff and
-  answer-key gates untested, and those are where non-UI teams will judge it.
-- Avoid: a deadline-critical release, a regulated or sensitive-data slice (unless the pilot is
-  specifically about those guards), a repo with no tests at all (add a harness first, as its own
-  ticket).
-
-## 3. Prerequisites
-
-| Item | Check |
-| --- | --- |
-| Claude Code | `claude --version`; this release was built and validated on 2.1.285 |
-| The plugin | `/plugin marketplace add arunma/delivery-framework`, then `/plugin install delivery@delivery-framework`; `/delivery:` autocompletes |
-| Python 3.9+ | The tools and hooks are standard library only |
-| graphify and archify | Read, then run, `tools/setup-tools.sh` from the plugin (installs globally). Optional for the first week; sessions report NOT RUN without them |
-| Mermaid CLI | `mmdc --version` (diagram checks) |
-| spec-kit | For tier M and L specs and plans |
-| Tracker credentials | `JIRA_SITE`, `JIRA_USER`, `JIRA_TOKEN` in the project's gitignored `.env`; `git check-ignore .env` prints `.env`. Never pasted into a chat or a ticket |
-| Staging only, synthetic data only | A staging environment and synthetic accounts (for example a `+test@` pattern the E2E wrapper enforces). No production URL, flavor or credential on any pilot machine or CI runner; set `prod_guard` patterns in `.delivery/guards.json` |
-| Devices | UI: a simulator or emulator, or a device farm, for E2E and captures. Data: a local or ephemeral warehouse (for example DuckDB). API: an ephemeral or staging environment |
-| CI (week 2) | Repository admin to install the Claude GitHub App and add `ANTHROPIC_API_KEY`; branch protection on the default branch |
-
-## 4. Roles
-
-| Role | In the pilot |
-| --- | --- |
-| **Owner** (one person) | Confirms the profile, answers open questions, approves the contract, commits and merges, makes the go/no-go call |
-| **Engineer** (one or two) | Runs `/delivery:start` and the sessions, reads every report, keeps `pilot/LOG.md` |
-| **Reviewer** (a person not running the sessions) | Reviews PRs as for any change, records human fixes, spot-checks one verification file per session against the contract |
+- **Owner** (one person): confirms the profile, answers questions, approves the contract, commits,
+  makes the go/no-go call.
+- **Engineer** (one or two): runs the sessions, reads every report, keeps the log.
+- **Reviewer** (not running sessions): reviews PRs as usual, notes every fix they had to make, and
+  spot-checks one check file per session against the contract.
 
 ## 5. Week by week
 
-### Week 0: set up and dry runs
+**Week 0, set up.**
+1. `/delivery:start` in the pilot repo. Correct what it detected; confirm the size; read `PROFILE.md`
+   with the owner.
+2. Test the guards: ask the agent to `git commit` (it must be blocked) and to `cat .env` (it must ask
+   first). Add a production pattern and check it is caught.
+3. For the pilot slice only: write the contract (`/delivery:atlas` or `/delivery:contract`), then
+   `/delivery:specify-from-atlas`, `/delivery:verify-specs`, `/delivery:plan-and-tasks`. The owner
+   approves each.
+4. `/delivery:jira-sync` as a dry run. Record baseline numbers from comparable past work.
 
-1. Install the plugin and check that `/delivery:` autocompletes its commands.
-2. In the pilot repo: `/delivery:start`. Check the surfaces it detected against what you know; correct
-   them. Confirm tier M for the pilot slice. Review `.delivery/PROFILE.md` with the owner.
-3. Check the guards: ask the agent to `git commit`; it must be blocked with the approval message.
-   Ask it to `cat .env`; it must ask first. Add your production patterns to
-   `.delivery/guards.json` and confirm one is caught.
-4. Run the slice's contract step (`delivery:atlas` for UI, `delivery:contract` otherwise) for just
-   the pilot slice, then `delivery:specify-from-atlas`, `delivery:verify-specs` and
-   `delivery:plan-and-tasks`. Owner approves.
-5. Dry runs: `python3 tools/create_tickets.py --dry-run …` (via `delivery:jira-sync`),
-   `sessionize.py validate`. Fix anything they report.
-6. Copy [templates/pilot-LOG.md](templates/pilot-LOG.md) to `pilot/LOG.md`; record the baseline
-   numbers for comparable past work.
+**Weeks 1 and 2, run sessions.**
+1. At most one session a day, each in a fresh Claude Code session: `/delivery:session <ID>`.
+2. Check the report against [CHECKLIST.md](CHECKLIST.md) §13 first. Missing evidence: send it back
+   and count it as rework.
+3. The owner reviews `git diff --staged`, commits and opens the PR; the reviewer reviews it.
+4. Log the session the same day.
 
-### Week 1: interactive sessions
+**Week 3, decide.**
+1. `/delivery:close-wave 1`: re-run everything, the real not-done list, lessons turned into rules.
+2. Fill the go/no-go list below with the owner, the engineers and the reviewer.
+3. Send generic lessons back to the framework ([CONTRIBUTING.md](CONTRIBUTING.md)), anonymised.
 
-1. One session per day at most, each in a **fresh** Claude Code session: `/delivery:session <ID>`.
-2. Read the report against [CHECKLIST.md](CHECKLIST.md) §13 before anything else. Missing evidence →
-   re-entry prompt, and count it as rework.
-3. The owner commits (`touch .delivery/APPROVED`, then commit, or commit from their own shell) and opens
-   the PR. The reviewer reviews it as usual.
-4. Log every session the same day (section 7).
+## 6. Every day
 
-### Week 2: CI-driven sessions
+1. `/delivery:status`: what is next, what drifted.
+2. Pick the next session whose dependencies are done; run it in a fresh session.
+3. Answer what it asks; don't let it decide product questions.
+4. Read the report, check the evidence; the owner commits or sends it back.
+5. Log it: ten minutes at the end of the day.
 
-1. Copy [ci/github-actions/delivery-session.yml](ci/github-actions/delivery-session.yml) into the pilot
-   repo, read it, adapt the allowed tools, and run it once with `workflow_dispatch` on the smallest
-   remaining session.
-2. Then let tickets drive: an issue titled `<SESSION-ID> · … · <KEY>` labelled `delivery:ready`
-   produces a draft PR. UI device flows cannot run on a Linux runner; they show NOT RUN and need a
-   local run before the PR is ready.
-3. Compare with week 1: cycle time, human fixes, first-pass rate.
+## 7. Known problems and fixes
 
-### Week 3: review and decide
-
-1. `/delivery:close-wave 1` for the pilot slice: re-run everything, sweep verification, the real
-   not-done list, the learning loop.
-2. Fill the go/no-go checklist (section 9) with the owner, the engineers and the reviewer.
-3. Carry generic lessons back to the framework (CONTRIBUTING.md), anonymised.
-
-## 6. Daily routine
-
-1. `/delivery:status` (add `--jira` once credentials are set): what is next, what drifted.
-2. Pick the next session whose dependencies are done; open a fresh session; `/delivery:session <ID>`.
-3. Answer what the session asks; do not let it decide product questions.
-4. Read the report; check the evidence; owner commits or sends it back with the re-entry prompt.
-5. Log it. Ten minutes at the end of the day, not at the end of the week.
-
-## 7. Measuring and recording
-
-Keep `pilot/LOG.md` (template: [templates/pilot-LOG.md](templates/pilot-LOG.md)) in the pilot repo:
-one row per session with the ticket, the tier, start and ready timestamps, contexts used, the
-verification first-pass result, rework, human fixes on the PR, guard incidents and a one-line note.
-Weekly, total the metrics in section 1 at the bottom of the log.
-
-## 8. Known failure modes and fixes
-
-These are from the case study ([examples/case-study-mobile-vault.md](examples/case-study-mobile-vault.md))
-and from running the framework since.
+From the case study ([examples/case-study-mobile-vault.md](examples/case-study-mobile-vault.md)) and
+later use.
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| E2E fails with selector errors that look like wrong ids | A screen-protection feature hides the accessibility tree from UI automation | A staging-only capture switch, a no-op in production and pinned by a test. Never weaken the protection |
+| E2E fails with selector errors that look like wrong ids | Screen protection hides the app from UI automation | A staging-only capture switch that does nothing in production, with a test. Never weaken the protection |
 | The E2E flow types `undefined` into a field | Some E2E tools ignore exported shell variables | Pass credentials with `-e` through `tools/maestro/e2e.sh` |
+| Imported test files get names like `IMG_<timestamp>` | Importing from the photo library renames them | Import from the Files app |
 | Untracked specs or mockups overwritten | An agent rewrote files with no git history | Back up before every change; the skills do it first |
-| Parallel planning agents step on each other | Shared files and branch-switching setup scripts | `plan-writer` writes only its own spec folder; one main session merges; check `git status` after |
-| Every "Blocks" link is backwards | The tracker's link payload is inverted | `create_tickets.py` handles it; hand-check one pair after creating links |
-| Links go to the wrong screen | Two atlas ids share a prefix | `build_atlas.py --strict` fails on ambiguous prefixes |
-| Different screens show different facts | Parts invent their own seed data | One facts block in the kit; screens never inline a fact |
-| "Done" with nothing pasted | The session summarised instead of proving | Reject the report; re-entry prompt; count it as rework |
-| The session ran out of context | The block's slice was too big | Stop at a task boundary, HANDOFF.md, split the session next time |
-| An agent "approved to push" commits | Approval of the work was read as approval to commit | The git guard blocks it; the owner approves each commit |
-| A data pipeline's tests pass on a changed answer key | The key was regenerated to make a test pass | The answer key changes only with the contract, reviewed like a contract change |
+| Parallel planning agents step on each other | Shared files and branch-switching scripts | Each writes only its own spec folder; one main session merges; check `git status` |
+| Every dependency link in Jira is backwards | The tracker's link payload is inverted | `create_tickets.py` handles it; check one pair by hand |
+| Links in the mockups go to the wrong screen | Two screen ids share a prefix | `build_atlas.py --strict` fails on it |
+| Different screens show different facts | Each part invented its own sample data | One facts block in the kit |
+| A session block fails when run on its own | It said "see above" | Every block repeats its guards in full |
+| "Done" with nothing pasted | The session summarised instead of proving | Reject it, send it back, count it as rework |
+| The session ran out of context | The slice was too big | Stop at a task boundary, write `HANDOFF.md`, split it next time |
+| The agent commits after "looks good" | Approval of the work was read as approval to commit | The git guard blocks it; the owner approves each commit |
+| Pipeline tests pass on a changed answer key | The key was regenerated to make a test pass | The answer key changes only with the contract |
 
-## 9. Go / no-go checklist and rollback
+## 8. Go or no-go
 
-Go, if all of these hold:
-- [ ] The metric bars written in week 0 were met, or missed for a reason that is fixed.
+Go if all of these hold:
+- [ ] The bars set in week 0 were met, or missed for a reason that is now fixed.
 - [ ] Zero guard incidents.
-- [ ] Every merged PR had a verification file with no Open row and pasted test evidence.
+- [ ] Every merged PR had a check file with no open rows and pasted test output.
 - [ ] The reviewer would accept the same process on the next feature.
-- [ ] At least one non-UI surface was piloted, or the decision is explicitly limited to UI work.
+- [ ] A non-app project was piloted too, or the decision is limited to app work.
 
-No-go, or partial: keep what helped (often the contract-first rule, the guards and the verification
-round) and drop the rest by tier: run tier S for everything until the team chooses otherwise.
+No-go or partial: keep what helped (often contract first, the guards and the independent check) and
+run everything as small work until the team chooses otherwise.
 
-**Rollback** (nothing in the plugin is irreversible):
-1. `claude plugin disable delivery@delivery-framework` (or uninstall). Hooks stop at once.
-2. Delete the project's `.delivery/` folder, or keep `profile.json` for the record.
-3. Remove `.github/workflows/delivery-session.yml` and the Actions secrets it used.
-4. Documents the pilot produced (contracts, specs, plans) stay in the repo as ordinary docs.
+**Rollback** (nothing is irreversible): `claude plugin disable delivery@delivery-framework` stops the
+hooks at once; delete the project's `.delivery/` folder; the contracts, specs and plans stay as
+ordinary docs.
+
+## 9. Optional: sessions from CI
+
+Once interactive sessions work, you can let tickets drive them.
+[ci/github-actions/](ci/github-actions/) has an **example** workflow: an issue labelled
+`delivery:ready` runs `/delivery:session <ID> --ci` headless on its own branch and opens a draft PR.
+Read its README, adapt it, and run it once by hand (`workflow_dispatch`) on the smallest session
+first. It needs the Claude GitHub App, an `ANTHROPIC_API_KEY` secret and branch protection. App
+end-to-end flows can't run on a Linux runner; they show NOT RUN and need a local run before the PR is
+ready. Never point it at production. To roll back, remove the workflow file and its secrets.

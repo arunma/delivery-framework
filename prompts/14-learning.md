@@ -11,7 +11,7 @@ missing or was ignored. Read AGENTS.md (Project Learnings), CLAUDE.md §0 and th
 - Ignored: propose how to make the existing rule harder to miss (shorter, earlier, repeated in the
   SESSIONS.md guard text).
 - If it is generic, also propose the change to the delivery framework (template, prompt or
-  FRAMEWORK.md pitfall), and a line for its examples/ case study.
+  a PILOT.md failure mode), and a line for its examples/ case study.
 Show the exact diff. Apply nothing until the owner agrees.
 ```
 

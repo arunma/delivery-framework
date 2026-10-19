@@ -1,5 +1,5 @@
 ---
-description: Run the independent verification round for one spec - screenshot parity for UI, contract, answer-key or golden-output checks for other surfaces
+description: Check the result of one spec matches the contract, by a reviewer that did not write it - screenshots for apps, contract tests for APIs, expected outputs for data
 argument-hint: "<spec NNN>"
 ---
 

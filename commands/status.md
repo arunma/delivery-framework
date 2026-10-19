@@ -1,5 +1,5 @@
 ---
-description: Report delivery status - tasks done per session from tasks.md, ticket status from the tracker, and the drift between them
+description: Show delivery status - what is done per session, what is next, and where the tracker disagrees with the work
 argument-hint: "[--jira]"
 ---
 

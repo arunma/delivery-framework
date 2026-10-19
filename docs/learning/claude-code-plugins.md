@@ -773,8 +773,9 @@ claude plugin install delivery@delivery-framework
 How it uses the concepts above:
 
 - **Assess first.** `/delivery:start` runs the `assess` skill, which runs `tools/assess.py` and the
-  `tiering` skill and writes `.delivery/profile.json`: surfaces, track, tier S/M/L, risk flags, and
-  every phase marked on, off or swapped. Every other skill reads the profile first and stops if its
+  `tiering` skill and writes `.delivery/profile.json`: what you're building (`surfaces`), existing
+  or new project (`track`), size small, medium or large (`tier` S/M/L), risk flags, and every step
+  marked on, off or swapped. Every other skill reads the profile first and stops if its
   phase is off, so a data pipeline never reaches the `atlas` skill.
 - **Skills drive, scripts compute.** A skill's body says what to do and calls a script for anything
   that must be exact (`assess.py` for detection, `sessionize.py` to generate and validate session
@@ -802,16 +803,16 @@ The flow, with the assessment choosing the path:
 ```mermaid
 flowchart TB
     ST["/delivery:start"] --> A["assess skill + tools/assess.py"]
-    A --> TI["tiering skill: S, M or L"]
+    A --> TI["tiering skill: small, medium or large"]
     TI --> P[".delivery/profile.json<br/>surfaces, track, tier,<br/>phases on / off / swapped"]
-    P --> S{Surface}
-    S -->|ui| UI["atlas skill<br/>Gate: screenshot parity"]
-    S -->|api| API["contract skill: OpenAPI + sequences<br/>Gate: contract tests, contract diff"]
-    S -->|data| D["contract skill: data contract + golden dataset<br/>Gate: answer-key match"]
+    P --> S{"What you are building"}
+    S -->|ui| UI["atlas skill: clickable mockups<br/>Check: screenshots against mockups"]
+    S -->|api| API["contract skill: OpenAPI + sequences<br/>Check: contract tests, contract diff"]
+    S -->|data| D["contract skill: data contract + golden dataset<br/>Check: output equals the answer key"]
     S -->|"cli / infra / ml"| O["contract skill: API surface, IaC plan,<br/>or eval set"]
-    UI & API & D & O --> SP["specify-from-atlas, verify-specs,<br/>plan-and-tasks, sessionize, jira-sync<br/>(on for tier M and L)"]
+    UI & API & D & O --> SP["specify-from-atlas, verify-specs,<br/>plan-and-tasks, sessionize, jira-sync<br/>(on for medium and large)"]
     SP --> SE["/delivery:session<br/>run-session skill: test-first, evidence"]
-    SE --> PR["/delivery:parity<br/>parity-reviewer subagent"]
+    SE --> PR["/delivery:parity: check against the contract<br/>parity-reviewer subagent"]
     PR --> G["Hooks: no commit or push<br/>without owner approval"]
     G --> OW["Owner commits, opens PR"]
     OW -->|next session| SE

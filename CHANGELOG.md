@@ -2,6 +2,19 @@
 
 All notable changes to the delivery framework plugin. Versions follow [semver](https://semver.org/).
 
+## Unreleased
+
+### Changed
+- Docs rewritten in plain words and cut by about two thirds (README, FRAMEWORK, CHECKLIST, PILOT).
+  "Tier S/M/L" is now "small / medium / large project"; "parity" is "check the result matches the
+  contract"; "atlas" is "clickable mockups". Two worked examples: an existing web app with an API,
+  and a new data pipeline. The CI-driven pilot week is optional. Plugin behaviour is unchanged.
+
+### Fixed
+- `sessionize.py` reads phase headings without the word "Session" and with a tracker key after the
+  id (`## Phase 1a — S03a1 · ABC-148: …`), so `/delivery:status` works on such projects.
+- README: `.delivery/APPROVED` allows commit and push for 15 minutes, not one commit.
+
 ## 0.1.0
 
 First release as a Claude Code plugin (`delivery`) with its own marketplace (`delivery-framework`).

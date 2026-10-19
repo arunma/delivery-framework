@@ -21,7 +21,7 @@ design review by the `design-reviewer` agent, which did not draw the screens.
 1. If `design/atlas-src/` does not exist, copy `${CLAUDE_PLUGIN_ROOT}/tools/atlas-starter/` there,
    leaving out `.venv/`, `out/` and `__pycache__/`.
 2. Point the output paths at the top of its scripts to `design/atlas/`, `design/png/` and
-   `design/BACKEND-SPLIT.md` (FRAMEWORK.md phase 4).
+   `design/BACKEND-SPLIT.md`.
 3. In `design/atlas-src/`: `uv sync`, then `uv run playwright install chromium` once per machine.
 
 ## Every change

@@ -1,5 +1,5 @@
 ---
-description: Run one session (a SESSIONS.md block) or one tier-S ticket through the execution loop, ending staged with a report
+description: Run one session (a block in SESSIONS.md) or one small-project ticket - tests first, build, check against the contract - ending with the work staged and a report
 argument-hint: "<SESSION-ID | TICKET-KEY> [--ci]"
 ---
 

@@ -24,7 +24,10 @@ import pathlib
 import re
 import sys
 
-PHASE = re.compile(r"^##\s+Phase\s+[\w.]+\s*[:.\-—]\s*Session\s+`?([A-Za-z][\w·]*)`?\s*(?:[·:\-—]\s*(.*))?$")
+# "## Phase 1: Session S01 · summary" (template) or "## Phase 1a — S03a1 · ABC-148: summary"
+# ("Session" optional; an optional tracker key after the id is skipped).
+PHASE = re.compile(r"^##\s+Phase\s+[\w.]+\s*[:.\-—]\s*(?:Session\s+)?`?([A-Za-z][\w·\-]*\d[\w·\-]*)`?"
+                   r"(?:\s*·\s*[A-Z][A-Z0-9]+-\d+)?\s*(?:[·:\-—]\s*(.*))?$")
 DEPENDS = re.compile(r"^\*\*Depends on\*\*\s*:\s*(.+)$")
 TASK = re.compile(r"^\s*-\s+\[([ xX])\]\s+(T\d+)\b(.*)$")
 FR = re.compile(r"\bFR-\d+[a-z]?\b")

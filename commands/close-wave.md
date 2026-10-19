@@ -1,5 +1,5 @@
 ---
-description: Close a wave - re-run everything, sweep verification, list the real not-done state, test seams, run the learning loop
+description: Close a batch (wave) of sessions - re-run every check, list what is really not done, test where features meet, and turn mistakes into rules
 argument-hint: "<wave number>"
 ---
 
