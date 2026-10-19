@@ -126,7 +126,7 @@ def page(body):
 
 
 class Screen:
-    """A mockup and its place in the atlas. reached_from / goes_to: [(label, id | id prefix | None)]."""
+    """A mockup and its place in the screen map. reached_from / goes_to: [(label, id | id prefix | None)]."""
     def __init__(self, sid, part, title, purpose, html_, reached_from, goes_to, before=None):
         self.sid, self.part, self.title, self.purpose = sid, part, title, purpose
         self.html, self.reached_from, self.goes_to, self.before = html_, reached_from, goes_to, before

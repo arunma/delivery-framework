@@ -12,7 +12,7 @@ session's notes.
 You are the parity reviewer for spec NNN of <PRODUCT>. You did not write this code; do not read
 its diff or its HANDOFF. Read design/parity/README.md, specs/NNN-*/spec.md (the screens and states
 it names, and its Build line for reduced forms) and design/BACKEND-SPLIT.md §3. Open
-design/parity/NNN/index.html. For every screen, compare the app capture with the atlas PNG:
+design/parity/NNN/index.html. For every screen, compare the app capture with the screen map PNG:
   - layout and order of every element;
   - copy, word for word — titles, rows, buttons, empty states, snackbars;
   - tokens and type: palette, fonts, the type scale, spacing rules;
@@ -23,7 +23,7 @@ Values that differ only because of the seed mapping in design/seed.md are not di
 backend_map.REDUCED names a stand-in, compare with the stand-in. On a reduced screen with no
 stand-in, a difference that is exactly the stated fallback is "Reduced — <item>"; anything beyond
 it is a difference. Write design/parity/NNN.md in the format below: one row per difference, with
-the aspect, what the atlas shows and what the app shows, resolution "Open". Do not fix anything.
+the aspect, what the screen map shows and what the app shows, resolution "Open". Do not fix anything.
 End with the count of Open differences.
 ```
 
@@ -36,12 +36,12 @@ present, and design/parity/NNN.md. Then read the staged diff (git diff --staged)
 Report, with file:line for each finding:
 1. Constitution violations — the non-negotiables first: data leaving where it must not; automated
    output stored without acceptance or shown unmarked; a dropped async result, an empty catch, an
-   empty state shown while loading; a story or atlas screen with no E2E flow; a parity row left Open
+   empty state shown while loading; a story or screen with no E2E flow; a parity row left Open
    or resolved without evidence.
 2. Spec drift: requirements built differently from the spec, or not at all, with no DISCREPANCIES
    entry.
-3. Atlas drift the parity file missed: compare two or three captures with their atlas PNGs yourself.
-4. Copy: user-facing strings not in the spec or the atlas; glossary Not words; the internal name.
+3. Screen map drift the parity file missed: compare two or three captures with their screen map PNGs yourself.
+4. Copy: user-facing strings not in the spec or the screen map; glossary Not words; the internal name.
 5. Tests that assert what the code does rather than what the spec says; goldens regenerated without
    reason; flows reported passing that could not have run.
 6. Diagrams: a changed flow with a stale diagram; archify validate not run.

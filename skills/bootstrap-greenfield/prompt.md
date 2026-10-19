@@ -45,8 +45,8 @@ before the owner answers.
   any app config with a staging/production split.
 - Synthetic fixtures: a generator with a fixed seed, no real data, ever.
 - tools/: jira.py, create_tickets.py, jira_dashboard.py, setup-tools.sh from the framework.
-- design/atlas-src/ copied from tools/atlas-starter; check that `uv run render_parts.py` and
-  `uv run build_atlas.py` run.
+- design/screen-map-src/ copied from tools/screen-map-starter; check that `uv run render_parts.py` and
+  `uv run build_screen_map.py` run.
 Run lint, tests and the E2E smoke flow, and paste the output.
 
 ## Step 4 — Architecture as a target design
@@ -65,6 +65,6 @@ the initiative label; create nothing until the owner agrees.
 4. Constitution: the principles proposed; the questions for the owner.
 5. ARCHITECTURE.md: sections, diagrams compiled.
 6. Tracker status.
-7. Next: phase 3 (research and sketches) → phase 4 (the atlas, drawn from research and sketches).
+7. Next: phase 3 (research and sketches) → phase 4 (the screen map, drawn from research and sketches).
 Commit nothing. List the files you created, and ask.
 ```

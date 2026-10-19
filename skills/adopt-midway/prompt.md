@@ -23,7 +23,7 @@ changed, and a one-line verdict: current, stale, or contradicted (with evidence)
 ## Step 2 — Map onto phases
 A table: Phase (0–14) | What exists | Gate items met (from CHECKLIST.md) | Gap | Effort (S/M/L).
 Treat existing artefacts as inputs, not as things to redo. Examples: existing mockups become the
-atlas by rebuilding them in the kit (phase 4) without redesigning; existing specs go straight to the
+screen map by rebuilding them in the kit (phase 4) without redesigning; existing specs go straight to the
 verification pass (phase 9) rather than being rewritten; existing decisions move into DECISIONS.md
 with their original dates.
 

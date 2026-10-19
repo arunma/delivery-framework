@@ -7,7 +7,7 @@ not apply and say so. -->
 
 ### Which document wins
 
-`docs/delivery/DECISIONS.md` > `.specify/memory/constitution.md` > the atlas > `specs/` > this
+`docs/delivery/DECISIONS.md` > `.specify/memory/constitution.md` > the screen map > `specs/` > this
 file. Where this file disagrees with one of those, it is wrong; the conflict is listed in §12 and
 in `docs/delivery/DISCREPANCIES.md`.
 

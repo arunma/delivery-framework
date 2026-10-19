@@ -1,0 +1,9 @@
+[project]
+name = "screen-map-starter"
+version = "0.1.0"
+description = "Screen map generator: kit, parts, render to PNG, build the screen map and the backend split."
+requires-python = ">=3.11"
+dependencies = ["playwright>=1.45", "pillow>=10"]
+
+[tool.uv]
+package = false

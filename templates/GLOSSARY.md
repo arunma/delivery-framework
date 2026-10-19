@@ -1,6 +1,6 @@
 # Glossary — one concept, one name (constitution V)
 
-<!-- Guidance: user-facing names as the atlas uses them. Every noun on the atlas appears here.
+<!-- Guidance: user-facing names as the screen map uses them. Every noun on the screen map appears here.
 A screen, spec or string that uses a word from the Not column is a defect. Add an entry before
 the first screen that uses a new concept. -->
 

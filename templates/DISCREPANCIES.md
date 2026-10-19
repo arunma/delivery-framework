@@ -1,6 +1,6 @@
 # Discrepancies
 
-<!-- Guidance: where a spec, the atlas, a decision, the constitution or the code disagree. A
+<!-- Guidance: where a spec, the screen map, a decision, the constitution or the code disagree. A
 session that finds one appends it here and STOPS; it does not edit the spec it is implementing.
 Parallel agents write their own plan-discrepancies.md; one main session merges them here.
 Ids: D-<spec>-<n>. Never renumber. Triage old entries at every wave close. -->

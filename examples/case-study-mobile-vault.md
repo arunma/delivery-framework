@@ -13,7 +13,7 @@ left out; what follows is the shape of the work, its counts and its lessons.
 | 1 Setup | `CLAUDE.md` (§0 traps, §1 non-negotiables), `AGENTS.md`, a longer `docs/AGENTS.md`, `tools/jira.py`, `.env` |
 | 2 Before | The seed record, a synthetic-document generator, a Maestro capture flow, the before screenshots |
 | 3 Research, review | The review prompt, `research.md`, `review.md`, two design-review rounds |
-| 4 Atlas | The atlas source (`kit.py`, ten parts, `spec_map.py`, `backend_map.py`, `render_parts.py`, `build_atlas.py`, a part brief and a fix brief), output `index.html` and `this-build.html` |
+| 4 Screen map | The screen map source (`kit.py`, ten parts, `spec_map.py`, `backend_map.py`, `render_parts.py`, `build_screen_map.py`, a part brief and a fix brief), output `index.html` and `this-build.html` |
 | 5 Decisions | A decisions file (wins over everything), a second decisions file for the model and later-build questions, `OPEN-QUESTIONS.md`, `GLOSSARY.md`, `DISCREPANCIES.md` |
 | 6 Backend | A backend change list, a separate audit of the later-build backend, the generated backend split |
 | 7 Constitution | `.specify/memory/constitution.md` (13 principles, 5 non-negotiable) |
@@ -26,7 +26,7 @@ left out; what follows is the shape of the work, its counts and its lessons.
 
 ## Counts
 
-- **Atlas:** 235 screens in 10 parts, 164 of them in this build. Of the 235, 149 are client-only,
+- **Screen map:** 235 screens in 10 parts, 164 of them in this build. Of the 235, 149 are client-only,
   33 ship reduced with a client fallback, and 53 wait for a later build (41 for a later backend
   build, 8 for a new sign-in method, 4 that need an on-device model). 0 unresolved links.
 - **Specs:** 19, about 1,220 functional requirements (1,221 at the verification pass), and 17
@@ -61,15 +61,15 @@ left out; what follows is the shape of the work, its counts and its lessons.
 5. **Gadget configuration through the API failed.** Filters and the dashboard could be created
    through the REST API, but pointing gadgets at filters did not work reliably. It is done once by
    hand. → `jira_dashboard.py` prints the filter ids for that step.
-6. **Ids colliding in the atlas.** Links resolve by prefix (`S-28` → `S-28-due-date-editor`). Two
+6. **Ids colliding in the screen map.** Links resolve by prefix (`S-28` → `S-28-due-date-editor`). Two
    screens sharing a prefix can send a link to the wrong one with no error, so duplicate ids had to
    be asserted in the build. Some cited ids also did not exist, or were ambiguous prefixes.
-   → `build_atlas.py` fails on duplicate ids, ambiguous prefixes and unowned screens, and the
+   → `build_screen_map.py` fails on duplicate ids, ambiguous prefixes and unowned screens, and the
    verification pass checks every cited id.
 7. **Keeping copy consistent through shared seed facts.** Early parts invented their own dates,
    counts and names. The same document expired on different days on different screens. The seed's
    folder names also collided with the new grouping names. → One facts block in `kit.py`, which
-   every screen reads (the fix-round brief, item 1), and a seed ↔ atlas mapping in `seed.md`.
+   every screen reads (the fix-round brief, item 1), and a seed ↔ screen map mapping in `seed.md`.
 8. **Sessions too big for one context.** Measured before the first run, 13 of the 54 sessions would
    not fit one context, so the build became 67. Each was split at a seam into two parts, each its
    own story. At first the second part also closed the first part's ticket; now each part closes

@@ -5,7 +5,7 @@ Brownfield: run `graphify update .` first if the graph is stale (local, no AI ca
 
 ```
 Write ARCHITECTURE.md for <PRODUCT> from <framework>/templates/ARCHITECTURE.md. Read CLAUDE.md, the
-constitution, docs/delivery/DECISIONS.md, the atlas, design/BACKEND-SPLIT.md,
+constitution, docs/delivery/DECISIONS.md, the screen map, design/BACKEND-SPLIT.md,
 docs/delivery/BACKEND-AUDIT.md and the specs that exist.
 Brownfield: use graphify-out/GRAPH_REPORT.md for the module map, dependencies and hot spots; use
 graphify path / explain / affected to trace each key flow before reading files. Call edges can be

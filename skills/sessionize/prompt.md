@@ -3,9 +3,9 @@
 ```
 Write SESSIONS.md for <PRODUCT> from <framework>/templates/SESSIONS.md. Inputs: every
 specs/*/plan.md "Session mapping" table and tasks.md phases, DECISIONS.md, OPEN-QUESTIONS.md,
-BACKEND-SPLIT.md, the atlas (this-build.html).
+BACKEND-SPLIT.md, the screen map (this-build.html).
 1. Order: foundation first (flag, identifiers, E2E wrapper, capture build, shot helper, golden
-   matrix, atlas-compare and parity-check, coverage gate; then the design system, the data layer,
+   matrix, screen-map-compare and parity-check, coverage gate; then the design system, the data layer,
    the shell), then engines with no screens, then screens wave by wave by dependency, sign-in and
    first run last, then a closing session that removes the flag. Later builds (deferred backend) in
    their own sections.
@@ -16,7 +16,7 @@ BACKEND-SPLIT.md, the atlas (this-build.html).
    skill). Heading: "### <step>. <name> — <what a person can do> · <JIRA_KEY>-NN", and on the next
    line "*Depends on: <names>. Branch: `wave/<closing key>-<wave-name>`. Epic: <EPIC>.*"
    (tools/create_tickets.py parses these). The fenced block is self-contained: guards, Jira
-   start/done, GAPS IN, context discipline and HANDOFF, spec and FR range, stories, atlas screens
+   start/done, GAPS IN, context discipline and HANDOFF, spec and FR range, stories, screens
    (with reduced stand-ins), backend fallback, read-first list, set .specify/feature.json, "do not
    re-plan" for part 2+, watch-fors (the discrepancies and open questions that bite here), E2E flows
    by name, the DoD in short, the report format. A block pasted alone must carry everything.

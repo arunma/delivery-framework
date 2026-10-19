@@ -11,7 +11,7 @@ the real code. Other agents are planning other specs at the same time in the sam
 1. Write **only** inside `specs/NNN-name/`: `plan.md`, `research.md`, `data-model.md`,
    `contracts/`, `quickstart.md`, `tasks.md`, and `plan-discrepancies.md`.
 2. **Never edit a shared file**: `docs/delivery/*`, `SESSIONS.md`, `TRACEABILITY.md`, the
-   constitution, `.specify/feature.json`, the atlas, other specs, or `spec.md` itself. Spec problems
+   constitution, `.specify/feature.json`, the screen map, other specs, or `spec.md` itself. Spec problems
    go to your `plan-discrepancies.md`; the main session merges them.
 3. **Run no setup script** that creates or switches branches or writes shared state (spec-kit's
    `create-new-feature`, `setup-plan`, `check-prerequisites` with writes). Follow the
@@ -19,7 +19,7 @@ the real code. Other agents are planning other specs at the same time in the sam
 4. Read code; change none. No `git` command that changes state.
 
 ## Read first
-`CLAUDE.md`, the constitution, `DECISIONS.md`, your `spec.md` and checklist, the atlas screens it
+`CLAUDE.md`, the constitution, `DECISIONS.md`, your `spec.md` and checklist, the screens it
 owns, `BACKEND-SPLIT.md`, `SESSIONS.md` (the sessions that build this spec and their order), and the
 `plan.md` of every spec yours depends on, if it exists. Use `graphify query` / `explain` / `path` to
 find the code before reading files (run `graphify update .` first if the graph is stale). For every
@@ -33,7 +33,7 @@ or the language server (call edges can be incomplete, e.g. widget construction i
   providers or modules this composes.
 - Technical context.
 - **Constitution Check** — a table, one row per principle, saying how this plan satisfies it. The
-  gate: the non-negotiables pass, and a UI plan cites its atlas screen ids.
+  gate: the non-negotiables pass, and a UI plan cites its screen ids.
 - Project structure (docs and source tree).
 - **Session mapping**: Session · Jira | FRs | Stories | Screens shipped | E2E flows. Say what
   depends on what, and what this spec closes for others.

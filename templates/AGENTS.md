@@ -163,4 +163,4 @@ incident in a few words. Generic lessons also go back to the framework repo. -->
   push. Approval to do something that needs a commit is not approval to commit: stop, show what
   would be committed, and ask.
 - Never put an AI tool's co-author line on a commit. Strip it if a wrapper adds it.
-- Back up untracked documents (`specs/`, `design/atlas-src/`) before an agent rewrites them in place.
+- Back up untracked documents (`specs/`, `design/screen-map-src/`) before an agent rewrites them in place.

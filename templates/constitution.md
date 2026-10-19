@@ -57,9 +57,9 @@ A feature is not done until it has:
 1. **Unit** tests for every pure function, from hand-built inputs, including the spec's edge cases.
 2. **Widget/component and golden** tests for every screen state the spec names (empty, loading,
    populated, error, offline), light and dark, at normal and largest text size.
-3. **E2E** flows for every user story and every atlas screen the session builds, at every priority,
+3. **E2E** flows for every user story and every screen the session builds, at every priority,
    against <STAGING> with a synthetic account, targeting accessibility identifiers. Each flow
-   captures every atlas screen it passes, named by screen id, for the parity check (XIII).
+   captures every screen it passes, named by screen id, for the parity check (XIII).
    For a surface with no UI, E2E is the integration layer the profile names: API tests against an
    ephemeral or staging environment, a pipeline run on the golden dataset, golden CLI runs.
 
@@ -79,7 +79,7 @@ This build changes <what: the app only / app plus named services>. Every server 
 either have a **client fallback** that ships a stated reduced behaviour, or be **deferred**. A
 dependency with no fallback that the build cannot ship without is **critical**, named with its
 reason. Dependencies, fallbacks and screens are listed in `design/BACKEND-SPLIT.md` (source
-`design/atlas-src/backend_map.py`). Work not listed there MUST NOT introduce a backend change.
+`design/screen-map-src/backend_map.py`). Work not listed there MUST NOT introduce a backend change.
 
 ### IX. Measured performance only
 
@@ -91,13 +91,13 @@ No performance claim without a measurement on a named device from a committed be
 ### XI. The contract artefact is the source of truth
 
 <!-- Guidance: name the artefact(s) from .delivery/profile.json ("contracts"). One per surface:
-UI → the mockup atlas; API/service → the API contract (OpenAPI, AsyncAPI or protobuf) plus
+UI → the screen map; API/service → the API contract (OpenAPI, AsyncAPI or protobuf) plus
 sequence diagrams; data/pipeline → the data contract (schemas, dictionary, lineage, SLAs);
 CLI/library → the public API surface doc plus usage examples; infra → the architecture diagram
 plus the IaC plan; ML/model → the eval set with its answer key and decision rule. A mixed project
 lists each. Delete the rows that do not apply. -->
 
-The contract for this project is **<artefact, e.g. the mockup atlas `design/atlas/` (UI) and the
+The contract for this project is **<artefact, e.g. the screen map `design/screen-map/` (UI) and the
 API contract `contracts/api/openapi.yaml` (API)>**. **Every change to a contracted surface starts
 in the contract**, is rebuilt or re-validated, and only then is specified and built. Specs cite the
 contract ids they implement (screen ids, operation ids, dataset and column names, command names,
@@ -116,7 +116,7 @@ and dark both shipped — whatever the owner decided in DECISIONS.md.>
 Every implementation ends with a **verification round** against the contract, judged by a reviewer
 or a check **that did not write the code**:
 - **UI — parity:** the app's captures (E2E, <device>, light theme, the seed in `design/seed.md`)
-  beside the atlas PNG of the same screen id: layout and order, copy word for word, tokens and
+  beside the screen map PNG of the same screen id: layout and order, copy word for word, tokens and
   type, glyphs, the primary button, and every state the spec names. Findings go to
   `design/parity/NNN.md`.
 - **API — contract diff:** contract tests and consumer-driven tests pass, and the diff between the
@@ -163,7 +163,7 @@ this initiative, flags that hide unfinished work. -->
   contract (the gate the profile names) → differences fixed or recorded → closing review.
 - **Every closing review asks whether there is a simpler way** — fewer components, fewer states,
   fewer moving parts. A better way not taken goes into `docs/delivery/BACKLOG.md` with its reason.
-- A session that disagrees with a spec, the atlas, a decision or the code STOPS and writes it to
+- A session that disagrees with a spec, the screen map, a decision or the code STOPS and writes it to
   `docs/delivery/DISCREPANCIES.md`. It does not edit the spec it is implementing.
 - **Never renumber a requirement.** Withdraw it and leave the gap.
 - Golden images are regenerated only in the session that changes the screen, and the diff is
@@ -181,7 +181,7 @@ others may be waived only with a documented justification and a dated follow-up 
 
 Every `/speckit.plan` MUST include a Constitution Check naming the principles it engages and how it
 satisfies them. A plan that cannot satisfy the non-negotiables does not proceed to tasks, and a UI
-plan that cites no atlas screen ids does not proceed either.
+plan that cites no screen ids does not proceed either.
 
 Versioning: MAJOR when a principle is removed or redefined; MINOR when one is added or materially
 expanded; PATCH for wording. Each amendment updates the Sync Impact Report above, `CLAUDE.md` §1, and

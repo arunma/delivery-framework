@@ -31,8 +31,8 @@ Each of these has already been got wrong once.
    literals).
 6. **No backend change unless `design/BACKEND-SPLIT.md` lists it**, and even then ship the client
    fallback it names.
-7. **The atlas is the UI contract.** A UI change starts in `design/atlas-src`, is rebuilt into the
-   atlas, and only then is specified and built. Specs cite screen ids.
+7. **The screen map is the UI contract.** A UI change starts in `design/screen-map-src`, is rebuilt into the
+   screen map, and only then is specified and built. Specs cite screen ids.
 8. **No commit and no push without the owner's explicit say-so, every time.** Approval for
    something that needs a commit is not approval to commit. Stage the work, show what would go in,
    and ask.
@@ -48,13 +48,13 @@ From `.specify/memory/constitution.md` v<X.Y.Z>. Read it; it is short.
 - **Nothing fails silently (IV).** No dropped async result, no empty `catch`, no empty state while
   loading.
 - **One concept, one name (V).** Names are in `docs/delivery/GLOSSARY.md`.
-- **Tested at three layers (VI):** unit, widget/component + golden, E2E for every story and atlas
+- **Tested at three layers (VI):** unit, widget/component + golden, E2E for every story and screen map
   screen a session builds. Coverage ≥ <80>%.
-- **Built screens match the atlas, and that is checked (XIII).** A reviewer who did not write the
-  code compares captures with the atlas; differences are fixed or recorded in
+- **Built screens match the screen map, and that is checked (XIII).** A reviewer who did not write the
+  code compares captures with the screen map; differences are fixed or recorded in
   `design/parity/NNN.md`.
 - **Minimal backend (VIII).** Every server dependency has a client fallback or is deferred.
-- **The atlas is the contract (XI).**
+- **The screen map is the contract (XI).**
 
 ## 2. Where things are
 
@@ -67,8 +67,8 @@ From `.specify/memory/constitution.md` v<X.Y.Z>. Read it; it is short.
 | Old → new coverage (brownfield) | `TRACEABILITY.md` |
 | Owner decisions (win over everything) | `docs/delivery/DECISIONS.md` |
 | Open questions, glossary, discrepancies, backlog | `docs/delivery/*` |
-| UI atlas | `design/atlas/index.html`, `this-build.html`; source `design/atlas-src` |
-| Backend split | `design/BACKEND-SPLIT.md` (source `design/atlas-src/backend_map.py`) |
+| UI screen map | `design/screen-map/index.html`, `this-build.html`; source `design/screen-map-src` |
+| Backend split | `design/BACKEND-SPLIT.md` (source `design/screen-map-src/backend_map.py`) |
 
 ## 3. Tracking work
 

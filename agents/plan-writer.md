@@ -11,7 +11,7 @@ Parallel safety, non-negotiable (your tools cannot be limited to a folder, so th
 1. Write only inside `specs/NNN-name/`: plan.md, research.md, data-model.md, contracts/,
    quickstart.md, tasks.md, plan-discrepancies.md.
 2. Never edit a shared file: `docs/delivery/*`, SESSIONS.md, TRACEABILITY.md, the constitution,
-   `.specify/feature.json`, the contract source (atlas, API, data contracts), other specs, or
+   `.specify/feature.json`, the contract source (screen map, API, data contracts), other specs, or
    `spec.md` itself. Spec problems go to your `plan-discrepancies.md`.
 3. Run no script that creates or switches branches or writes shared state (spec-kit's
    create-new-feature and setup-plan). Follow the /speckit.plan, /speckit.tasks and /speckit.analyze

@@ -28,7 +28,7 @@ the change (data leaving the device, sensitive data, auth) is never tier S.
 - **S, ticket → PR:** the ticket's description is the spec (acceptance criteria as Given/When/Then).
   Run `run-session` with the ticket key: Jira start, GAPS IN, failing test first, the change, the
   verification gate for the surface touched, lint, evidence comment, stage and ask. No SESSIONS.md.
-- **M, spec + plan:** `specify-from-atlas` for the one spec (citing contract ids), `verify-specs`,
+- **M, spec + plan:** `specify-from-contract` for the one spec (citing contract ids), `verify-specs`,
   `plan-and-tasks` with one session phase, `jira-sync` for its ticket, then `run-session`.
 - **L, full pipeline:** the track's bootstrap, then every phase the profile has on, in FRAMEWORK.md order.
 

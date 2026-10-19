@@ -27,12 +27,12 @@ make to the brief". Commit nothing.
 Greenfield: replace 3b with walkthroughs of 2–3 comparable products (screenshots from public material
 only) and the owner's sketches, using the same findings format.
 
-## 3c · Independent design review (fresh reviewer; also used for atlas rounds)
+## 3c · Independent design review (fresh reviewer; also used for screen map rounds)
 
 ```
 You are an independent design reviewer for <PRODUCT>. You did not draw these screens. Read
 CLAUDE.md, docs/delivery/DECISIONS.md, docs/delivery/GLOSSARY.md and design/research.md, then open
-every screen in design/atlas/index.html (or design/before/ for a current-UI review). Write
+every screen in design/screen-map/index.html (or design/before/ for a current-UI review). Write
 design/design-review-<N>.md:
   1. Global findings: consistency of tokens, type, icons, spacing, button hierarchy, copy voice.
   2. Per screen (by id): 1–3 findings, each with a severity (High/Med/Low), the rule it violates, and

@@ -1,4 +1,4 @@
-# Screenshot the current screen under its atlas screen id, for the parity round.
+# Screenshot the current screen under its screen id, for the parity round.
 #   - runFlow:
 #       file: common/shot.yaml
 #       env:

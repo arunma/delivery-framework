@@ -1,4 +1,4 @@
-"""Which specification owns each screen. The atlas groups by this; specs cite these screen ids."""
+"""Which specification owns each screen. The screen map groups by this; specs cite these screen ids."""
 import re
 
 SPECS = [  # number, slug, title

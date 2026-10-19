@@ -22,11 +22,11 @@ class AssessTests(unittest.TestCase):
             expected = json.loads((FIX / f"{name}.expected.json").read_text())
             self.assertEqual(assess(FIX / name, "--tier", "L"), expected, name)
 
-    def test_ui_keeps_atlas_and_parity(self):
+    def test_ui_keeps_screen_map_and_parity(self):
         p = assess(FIX / "ui-app", "--tier", "L")
         self.assertEqual(p["surfaces"], ["ui"])
         self.assertEqual(p["phases"]["contract"]["status"], "on")
-        self.assertEqual(p["phases"]["contract"]["skill"], "atlas")
+        self.assertEqual(p["phases"]["contract"]["skill"], "screen-map")
         self.assertEqual(p["phases"]["capture-before"]["status"], "on")
         self.assertEqual(p["phases"]["verification"]["status"], "on")
         self.assertTrue(p["risk_flags"]["backend_dependencies"])
@@ -39,17 +39,17 @@ class AssessTests(unittest.TestCase):
         self.assertEqual(p["phases"]["contract"]["skill"], "contract")
         self.assertIn("API contract", p["phases"]["contract"]["with"])
         self.assertIn("contract diff", p["phases"]["verification"]["with"])
-        self.assertNotIn("atlas", [v["skill"] for v in p["phases"].values()])
-        self.assertNotIn("Mockup atlas", json.dumps(p["phases"]))
+        self.assertNotIn("screen-map", [v["skill"] for v in p["phases"].values()])
+        self.assertNotIn("Screen map", json.dumps(p["phases"]))
 
-    def test_data_has_data_contract_and_no_atlas(self):
+    def test_data_has_data_contract_and_no_screen_map(self):
         p = assess(FIX / "data-pipeline", "--tier", "L")
         self.assertEqual(p["surfaces"], ["data"])
         self.assertEqual(p["phases"]["contract"]["skill"], "contract")
         self.assertIn("Data contract", p["phases"]["contract"]["with"])
         self.assertIn("answer key", p["phases"]["verification"]["with"])
-        self.assertNotIn("atlas", [v["skill"] for v in p["phases"].values()])
-        self.assertNotIn("Mockup atlas", json.dumps(p["phases"]))
+        self.assertNotIn("screen-map", [v["skill"] for v in p["phases"].values()])
+        self.assertNotIn("Screen map", json.dumps(p["phases"]))
         self.assertNotIn("Screenshots", json.dumps(p["phases"]))
         self.assertEqual(p["phases"]["backend-split"]["status"], "off")
 
@@ -65,7 +65,7 @@ class AssessTests(unittest.TestCase):
     def test_mixed_project_combines_swaps(self):
         p = assess(FIX / "ui-app", "--tier", "L", "--surface", "ui", "--surface", "api")
         self.assertEqual(p["phases"]["contract"]["status"], "swapped")
-        self.assertIn("Mockup atlas", p["phases"]["contract"]["with"])
+        self.assertIn("Screen map", p["phases"]["contract"]["with"])
         self.assertIn("API contract", p["phases"]["contract"]["with"])
 
     def test_empty_repo_is_greenfield_and_writes_files(self):

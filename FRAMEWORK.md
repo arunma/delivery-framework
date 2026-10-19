@@ -22,7 +22,7 @@ build the result checks it against the contract.
 
 | What you're building | The contract | How the result is checked |
 | --- | --- | --- |
-| App (mobile, web, desktop) | Clickable mockups of every screen (the "atlas") | Screenshots of the built app beside the mockups |
+| App (mobile, web, desktop) | Clickable mockups of every screen (the screen map) | Screenshots of the built app beside the mockups |
 | API or service | OpenAPI, AsyncAPI or protobuf, plus sequence diagrams | Contract tests and a contract diff |
 | Data pipeline | Data contract, plus a golden dataset with its expected output (the answer key) | Output equals the answer key; quality checks; a second run matches |
 | Library or CLI | Every public command and function, with runnable examples | Examples run as tests; golden output; semver check |
@@ -86,9 +86,9 @@ From step 4 on, every project runs the same steps.
 ## 3 · Research and 4 · Contract
 
 - **For:** writing down what "done" looks like before writing specs.
-- **Run:** `/delivery:atlas` for an app; `/delivery:contract <api|data|cli|infra|ml>` otherwise.
+- **Run:** `/delivery:screen-map` for an app; `/delivery:contract <api|data|cli|infra|ml>` otherwise.
 - **You get:** a short research note, independent design reviews, and the contract: clickable
-  mockups of every screen in `design/atlas/`, or files in `contracts/`.
+  mockups of every screen in `design/screen-map/`, or files in `contracts/`.
 - **Done when:** the contract builds or validates with no errors, every id is unique, and the owner
   has approved it in writing in `DECISIONS.md`.
 
@@ -130,7 +130,7 @@ From step 4 on, every project runs the same steps.
 ## 9 · Specs
 
 - **For:** one testable spec per feature, citing the contract ids it builds.
-- **Run:** `/delivery:specify-from-atlas`, then `/delivery:verify-specs`.
+- **Run:** `/delivery:specify-from-contract`, then `/delivery:verify-specs`.
 - **You get:** `specs/NNN-name/spec.md` with stories, numbered requirements (FRs), a test plan and
   flow diagrams; `docs/delivery/SPEC-VERIFICATION.md`.
 - **Done when:** every contract id is covered, every reference resolves, and nothing needs
@@ -211,9 +211,9 @@ graphify-out/GRAPH_REPORT.md            # the only committed part of the code gr
 design/
   seed.md  research.md  review.md  design-review-N.md
   before/<screen-id>.png                # existing apps only
-  atlas-src/                            # the mockup generator (from tools/atlas-starter)
-  atlas/index.html  atlas/this-build.html
-  BACKEND-SPLIT.md                      # generated from atlas-src/backend_map.py
+  screen-map-src/                       # the mockup generator (from tools/screen-map-starter)
+  screen-map/index.html  screen-map/this-build.html
+  BACKEND-SPLIT.md                      # generated from screen-map-src/backend_map.py
   ui-review/NNN.md                      # one per spec
   app/<screen-id>.png                   # screenshots of the built app
   parity/NNN.md                         # one per spec

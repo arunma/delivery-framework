@@ -9,8 +9,8 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONV
 
 1. Back up every untracked document before reading anything else.
 2. Read [prompt.md](prompt.md) and run it as written.
-3. Map each existing artefact onto a phase and onto the profile: existing mockups become the atlas
-   (rebuilt in the kit, `atlas` skill); an existing OpenAPI file, schema set or eval set becomes the
+3. Map each existing artefact onto a phase and onto the profile: existing mockups become the screen map
+   (rebuilt in the kit, `screen-map` skill); an existing OpenAPI file, schema set or eval set becomes the
    contract artefact (`contract` skill) as it is, after re-validation.
 4. List the gaps as phases with their skill: for example "no verification pass on the specs →
    `verify-specs`", "no data-quality checks → `contract`".

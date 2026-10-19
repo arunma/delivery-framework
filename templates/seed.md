@@ -2,8 +2,8 @@
 
 <!-- Guidance: the synthetic dataset every capture and parity screenshot uses. Never real people,
 documents, numbers or addresses. Brownfield: record what was there before and what was deleted
-(with the owner's agreement). Greenfield: no "before" section; the seed is the atlas's facts
-block, loaded into the first build. The atlas kit's facts block and this file must agree; a
+(with the owner's agreement). Greenfield: no "before" section; the seed is the screen map's facts
+block, loaded into the first build. The screen map kit's facts block and this file must agree; a
 mapping table covers unavoidable differences. -->
 
 Seeded <YYYY-MM-DD> into the synthetic <STAGING> account (`<SYNTHETIC_PATTERN>`, credentials in
@@ -22,11 +22,11 @@ generated (stamped SPECIMEN, placeholder bars) — no real names, numbers or con
 
 <Legend for markers. Counts as the app shows them after seeding.>
 
-## Seed ↔ atlas mapping
+## Seed ↔ screen map mapping
 
-| Atlas (kit facts) | App seed | Why they differ |
+| Screen map (kit facts) | App seed | Why they differ |
 |---|---|---|
-| Owner *<atlas name>* | *<seed display name>* | <…> |
+| Owner *<screen map name>* | *<seed display name>* | <…> |
 
 ## How it was seeded
 

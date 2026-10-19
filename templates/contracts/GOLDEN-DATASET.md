@@ -2,7 +2,7 @@
 
 <!-- Guidance: lives at contracts/data/golden/README.md (data) or contracts/eval/README.md (ML).
 A golden dataset is small, synthetic, committed, and has an answer key: the exact output the
-pipeline (or the model, within the decision rule) must produce. It plays the role the atlas's seed
+pipeline (or the model, within the decision rule) must produce. It plays the role the screen map's seed
 plays for UI. Never real people, customers or production extracts. Remove these comments once
 filled in. -->
 

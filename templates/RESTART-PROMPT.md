@@ -33,7 +33,7 @@ Counts from the files: contract ids, specs, FRs, tasks, sessions, tickets.>
 | --- | --- |
 | Owner decisions (newest last) | `docs/delivery/DECISIONS.md` |
 | Open questions, discrepancies | `docs/delivery/OPEN-QUESTIONS.md`, `docs/delivery/DISCREPANCIES.md` |
-| Contract | <`design/atlas/` or `contracts/`> |
+| Contract | <`design/screen-map/` or `contracts/`> |
 | Specs, plans, tasks | `specs/NNN-*/` |
 | Sessions, run sheet, explainer | `SESSIONS.md`, `docs/delivery/RUN-SHEET.md`, `docs/delivery/SESSIONS-EXPLAINED.md` |
 | Tracker | `docs/delivery/JIRA.md`, `docs/delivery/jira-map.json` |

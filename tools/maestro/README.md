@@ -14,8 +14,8 @@ Generic starting points for E2E flows and screenshot capture. Copy them into the
   protection itself to make a test pass.
 - **Select by accessibility identifier**, then text, then coordinates as a last resort. In Flutter,
   a `Key` is not an iOS accessibility identifier; use `Semantics(identifier: ...)`.
-- **Screenshots are named by atlas screen id**: `common/shot.yaml` with `SCREEN_ID=<screen-id>`
-  writes `design/app/<screen-id>.png`, which the parity round compares with the atlas PNG.
+- **Screenshots are named by screen id**: `common/shot.yaml` with `SCREEN_ID=<screen-id>`
+  writes `design/app/<screen-id>.png`, which the parity round compares with the screen map PNG.
 
 Files: `capture_before.yaml` (the "before" capture), `common/login.yaml`, `common/shot.yaml`,
 `e2e.sh` (the wrapper), `.env.local.example` (copy to `.maestro/.env.local`, which is gitignored).

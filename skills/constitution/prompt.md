@@ -8,7 +8,7 @@ directly, from <framework>/templates/constitution.md and docs/delivery/DECISIONS
   interview/survey). Each states MUST/MUST NOT and gives a one-line rationale.
 - Then the framework principles: nothing fails silently; one concept, one name; tested at three
   layers; accessible by construction; minimal backend (fallback, deferred or critical); measured
-  performance only; the atlas is the contract; one visual language; built screens match the atlas
+  performance only; the screen map is the contract; one visual language; built screens match the screen map
   (parity, independent reviewer).
 - Technical constraints, the development workflow (Jira as the progress record; the closing order;
   the simpler-way review; stop on disagreement; never renumber), and governance (non-negotiables,

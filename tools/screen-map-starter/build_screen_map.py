@@ -1,6 +1,6 @@
-"""Build out/atlas/index.html (every screen) and out/atlas/this-build.html (what ships now).
+"""Build out/screen-map/index.html (every screen) and out/screen-map/this-build.html (what ships now).
 
-    uv run build_atlas.py [--strict]        (after render_parts.py)
+    uv run build_screen_map.py [--strict]        (after render_parts.py)
 
 this-build.html drops screens that need a backend item with no fallback, and swaps each full screen
 in backend_map.REDUCED for its reduced stand-in. The build FAILS (exit 1) on:
@@ -23,7 +23,7 @@ from backend_map import BACKEND, ITEMS, REDUCED  # noqa: E402
 from render_parts import PNG, load  # noqa: E402
 from spec_map import NAME, SPECS, TITLE, spec_of  # noqa: E402
 
-OUT = HERE / 'out' / 'atlas'
+OUT = HERE / 'out' / 'screen-map'
 IMG = OUT / 'img'
 e = html.escape
 
@@ -183,8 +183,8 @@ def build(every, this_build, out_name, strict):
     other = ('index.html', 'See every screen →') if this_build else ('this-build.html', 'See only this build →')
     head = 'This build: what ships with today’s backend' if this_build else 'Every screen, and how you get there'
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(kit.PRODUCT)} Atlas</title><style>{CSS}</style></head>
-<body><aside><b>{e(kit.PRODUCT)} · atlas</b>{''.join(navh)}</aside><main>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(kit.PRODUCT)} Screen map</title><style>{CSS}</style></head>
+<body><aside><b>{e(kit.PRODUCT)} · screen map</b>{''.join(navh)}</aside><main>
 <h1>{head}</h1><p>Each screen with its id, purpose, where it is reached from and where each control goes.
 All data is synthetic. {f'{len(deferred)} screens are deferred; {len(swap)} are replaced by their reduced form.' if this_build else ''}</p>
 <div class="stats"><div><b>{len(screens)}</b>screens</div><div><b>{len(groups)}</b>specs</div><div><b>{len(missing)}</b>links not drawn</div></div>
@@ -214,7 +214,7 @@ def main():
     if errors:
         print('\n'.join('ERROR ' + x for x in errors))
         raise SystemExit(1)
-    print(f'atlas: {n1} screens, this build: {n2}, unresolved links: {m1}; wrote {OUT}')
+    print(f'screen map: {n1} screens, this build: {n2}, unresolved links: {m1}; wrote {OUT}')
 
 
 if __name__ == '__main__':

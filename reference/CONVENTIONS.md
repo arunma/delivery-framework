@@ -11,9 +11,10 @@ printed (skills get it substituted; this file is read as plain text).
 2. Find this skill's phase in `phases`. If its `status` is `off`, say so in one line, name the
    reason (`why`), and stop unless the owner explicitly overrides it. If it is `swapped`, do the
    swapped work named in `with`, not the UI default.
-3. Use the surface's contract artefact and verification gate from `contracts`. "Atlas" and
+3. Use the surface's contract artefact and verification gate from `contracts`. "Screen map" and
    "parity" in the framework text mean the UI case; for any other surface read them as "the
    contract artefact" and "the verification gate" the profile names.
+4. Older profiles say `atlas` for `screen-map` (and `specify-from-atlas` for `specify-from-contract`).
 
 ## 2. Paths
 
@@ -37,7 +38,7 @@ printed (skills get it substituted; this file is read as plain text).
 - When two documents, or a document and the code, disagree: stop, append it to
   `docs/delivery/DISCREPANCIES.md` (template `${CLAUDE_PLUGIN_ROOT}/templates/DISCREPANCIES.md`),
   and ask. Never resolve it silently. Never edit the spec you are implementing.
-- Back up untracked documents (specs, atlas source, contracts) before an agent rewrites them.
+- Back up untracked documents (specs, screen map source, contracts) before an agent rewrites them.
 - Agents running in parallel never write the same file. Each writes its own (its own discrepancy
   file, its own spec folder); one session merges them afterwards.
 - Never weaken a protection (screen security, auth, validation) to make a test pass.

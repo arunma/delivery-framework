@@ -5,7 +5,7 @@ Needs `.env` with `JIRA_SITE`, `JIRA_USER` and `JIRA_TOKEN`. The tools never pri
 ## 12a · Backend items file
 
 ```
-Write docs/delivery/backend-items.json from design/atlas-src/backend_map.py ITEMS and
+Write docs/delivery/backend-items.json from design/screen-map-src/backend_map.py ITEMS and
 docs/delivery/BACKEND-AUDIT.md: one object per item {"id","title","kind":"task"|"bug"|"decision",
 "epic","fallback","sessions":[…],"labels":[…]}, plus the audit's prerequisites (kind "bug" where
 they are defects), and every open owner decision that blocks a later build (kind "decision"). Use

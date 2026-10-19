@@ -1,6 +1,6 @@
 ---
 name: parity-review
-description: The verification round that closes every session - an independent reviewer that never wrote the code checks built output against the contract and writes the findings file. UI - app captures beside atlas PNGs into design/parity/NNN.md; API - contract tests, consumer tests and the contract diff; data - output against the committed answer key plus quality checks; CLI - golden output and doctests; infra - plan diff; ML - eval against the decision rule. Use at DoD step 3, at wave close, or when someone asks whether a built feature matches its mockups or contract.
+description: The verification round that closes every session - an independent reviewer that never wrote the code checks built output against the contract and writes the findings file. UI - app captures beside screen map PNGs into design/parity/NNN.md; API - contract tests, consumer tests and the contract diff; data - output against the committed answer key plus quality checks; CLI - golden output and doctests; infra - plan diff; ML - eval against the decision rule. Use at DoD step 3, at wave close, or when someone asks whether a built feature matches its mockups or contract.
 argument-hint: "<spec NNN>"
 ---
 
@@ -14,9 +14,9 @@ names. Never give it the diff, the session's notes or HANDOFF.md.
 
 ## UI surface
 
-1. Run the project's atlas-compare command for the spec (it writes `design/parity/NNN/index.html`,
-   pairing each capture with its atlas PNG). If the project has none yet, list the pairs:
-   `design/app/<screen-id>.png` beside the atlas PNG of the same id.
+1. Run the project's screen-map-compare command for the spec (it writes `design/parity/NNN/index.html`,
+   pairing each capture with its screen map PNG). If the project has none yet, list the pairs:
+   `design/app/<screen-id>.png` beside the screen map PNG of the same id.
 2. Launch `parity-reviewer` with: the spec number, `specs/NNN-*/spec.md`, `design/parity/NNN/`
    (or the pair list), `design/BACKEND-SPLIT.md` §3 and `design/seed.md`. It writes
    `design/parity/NNN.md`, one row per difference, resolution Open, and the count of Open rows.

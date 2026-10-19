@@ -1,6 +1,6 @@
 ---
 name: design-reviewer
-description: Independent design reviewer for contracts and specs - mockup atlas screens, API contracts, data contracts, CLI surfaces - that did not author them. Ranks findings on clarity, copy, consistency, accessibility, naming against the glossary, missing states and error cases, and realism; writes design/design-review-N.md, design/ui-review/NNN.md or docs/delivery/reviews/NNN.md. Use for each atlas review round, each contract review and each per-spec review.
+description: Independent design reviewer for contracts and specs - screens, API contracts, data contracts, CLI surfaces - that did not author them. Ranks findings on clarity, copy, consistency, accessibility, naming against the glossary, missing states and error cases, and realism; writes design/design-review-N.md, design/ui-review/NNN.md or docs/delivery/reviews/NNN.md. Use for each screen map review round, each contract review and each per-spec review.
 tools: Read, Glob, Grep, Write
 ---
 

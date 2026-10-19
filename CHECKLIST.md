@@ -37,7 +37,7 @@ Project: `<PROJECT>` · Size: ☐ small ☐ medium ☐ large · ☐ existing ☐
 
 ## 4 · Contract
 - [ ] Backed up before every change
-- [ ] Builds or validates with no errors: unique ids, no broken links (mockups: `build_atlas.py --strict`)
+- [ ] Builds or validates with no errors: unique ids, no broken links (mockups: `build_screen_map.py --strict`)
 - [ ] Every review finding fixed, or rejected with a reason
 - [ ] The owner approved it (dated line in `DECISIONS.md`)
 

@@ -16,8 +16,8 @@ The exact commands are in `docs/delivery/RUN-SHEET.md`; how the sessions were cu
 and a question to the owner. Long sessions lose the thread, so every block also says how to stop
 cleanly and hand over.
 
-**Before the first session**, open `design/atlas/this-build.html` (what this build ships) and
-`design/atlas/index.html` (every screen), read `docs/delivery/DECISIONS.md` and work through
+**Before the first session**, open `design/screen-map/this-build.html` (what this build ships) and
+`design/screen-map/index.html` (every screen), read `docs/delivery/DECISIONS.md` and work through
 *Owner tasks* below. `ARCHITECTURE.md` says how the pieces fit; `TRACEABILITY.md` maps old to new;
 `design/BACKEND-SPLIT.md` says which screens ship reduced and why.
 
@@ -73,24 +73,24 @@ delete the rows that do not apply. The sessionize skill does this. -->
 1. **Unit and widget/component + golden tests green.** Unit tests for every pure function the
    session wrote, from hand-built inputs including the spec's edge cases. Widget and golden tests for
    every state the spec names (empty, loading, populated, error, offline): light and dark, normal and
-   largest text size, <two device sizes>, golden files named by atlas screen id. `<test command>`
+   largest text size, <two device sizes>, golden files named by screen id. `<test command>`
    with coverage ≥ <80>% overall and for every new module. A bug fix adds the test that would have
    caught it, shown failing first. Paste the output.
 2. **E2E flows written and green on <STAGING>.** One flow in `<e2e dir>/` for every user story and
-   every atlas screen the session implemented — at every priority — named `NNN_<story-slug>`,
-   targeting accessibility identifiers only. Each flow captures every atlas screen it passes through
+   every screen the session implemented — at every priority — named `NNN_<story-slug>`,
+   targeting accessibility identifiers only. Each flow captures every screen it passes through
    the shot helper, which writes `design/app/<screen-id>.png`. Build with `<capture build command>`
    (it sets `<CAPTURE_SWITCH>`); run with `tools/maestro/e2e.sh <flow>` (credentials passed with
    `-e`). Synthetic account only; the seeded one (`design/seed.md`) for screenshots. A flow that
    changes data restores the seed, or runs on a second synthetic account and takes no parity
    screenshot. Paste the output. A flow that cannot run here is reported **NOT RUN** with the reason
    and covered by a widget test; it is never reported as passing.
-3. **Parity round.** `<atlas-compare command> --spec NNN` writes `design/parity/NNN/index.html`,
-   pairing each capture with the atlas PNG. A **fresh reviewer agent that did not write the code**
+3. **Parity round.** `<screen-map-compare command> --spec NNN` writes `design/parity/NNN/index.html`,
+   pairing each capture with the screen map PNG. A **fresh reviewer agent that did not write the code**
    (prompt below) compares them and writes `design/parity/NNN.md`. Every difference is resolved as
    one of two things:
    - **Fixed in code**, then re-capture and re-review that screen; or
-   - **The atlas was wrong**: change `design/atlas-src` first, rebuild the atlas, and record it in
+   - **The screen map was wrong**: change `design/screen-map-src` first, rebuild the screen map, and record it in
      `docs/delivery/DISCREPANCIES.md`. If it is a product decision rather than a drawing error, stop
      and ask the owner.
 
@@ -119,7 +119,7 @@ this, with `NNN` filled in, and nothing else — not the diff, not the session's
 You are the parity reviewer for spec NNN of <PRODUCT>. You did not write this code; do not read
 its diff or its HANDOFF. Read design/parity/README.md, specs/NNN-*/spec.md (the screens and states
 it names, and its Build line for reduced forms) and design/BACKEND-SPLIT.md §3. Open
-design/parity/NNN/index.html. For every screen, compare the app capture with the atlas PNG:
+design/parity/NNN/index.html. For every screen, compare the app capture with the screen map PNG:
   - layout and order of every element;
   - copy, word for word — titles, rows, buttons, empty states, snackbars;
   - tokens and type: palette, fonts, the type scale, spacing rules;
@@ -130,15 +130,15 @@ Values that differ only because of the seed mapping in design/seed.md are not di
 backend_map.REDUCED names a stand-in, compare with the stand-in. On a reduced screen with no
 stand-in, a difference that is exactly the stated fallback is "Reduced — <item>"; anything beyond
 it is a difference. Write design/parity/NNN.md in the format below: one row per difference, with
-the aspect, what the atlas shows and what the app shows, resolution "Open". Do not fix anything.
+the aspect, what the screen map shows and what the app shows, resolution "Open". Do not fix anything.
 End with the count of Open differences.
 ```
 
 Parity file format (`design/parity/NNN.md`):
 
-| Screen | Aspect | Atlas shows | App shows | Resolution |
+| Screen | Aspect | Screen map shows | App shows | Resolution |
 | --- | --- | --- | --- | --- |
-| `<screen-id>` | copy | *<atlas text>* | *<app text>* | Open → Fixed in code (re-captured <date>) / Atlas was wrong (D-NNN-n) / Reduced — <item> / Partial — region owned by NNN, re-run in <session> / Not captured — <reason> |
+| `<screen-id>` | copy | *<screen map text>* | *<app text>* | Open → Fixed in code (re-captured <date>) / Screen map was wrong (D-NNN-n) / Reduced — <item> / Partial — region owned by NNN, re-run in <session> / Not captured — <reason> |
 
 ---
 
@@ -174,7 +174,7 @@ the report, and pushes and merges once per wave.
 
 These are the ground every screen stands on, and **skipping them is the main way this goes wrong**: a
 screen built before the data layer is retro-fitted into it, and a screen built before the parity
-tooling has no way to prove it matches the atlas.
+tooling has no way to prove it matches the screen map.
 
 ### 1. foundation-flag — The flag, identifiers, the E2E wrapper, goldens and parity tooling (`000-foundation`) · <JIRA_KEY>-NN
 
@@ -182,7 +182,7 @@ tooling has no way to prove it matches the atlas.
 
 <!-- Guidance: F-sessions build what every DoD step uses: the feature flag, the accessibility
 identifier convention, the E2E wrapper and capture build, the shot helper, the golden matrix,
-<atlas-compare> and <parity-check>, the coverage gate. Same block shape as widgets-domain below. -->
+<screen-map-compare> and <parity-check>, the coverage gate. Same block shape as widgets-domain below. -->
 
 ```
 <Same block shape as widgets-domain below, with Spec and range 000 FR-001–FR-0xx.>
@@ -201,8 +201,8 @@ identifier convention, the E2E wrapper and capture build, the shot helper, the g
 ```
 Before you start: read CLAUDE.md, .specify/memory/constitution.md (v<X.Y.Z>) and
 docs/delivery/DECISIONS.md in full. Principles <I, II, IV, VI and XIII> are non-negotiable, and
-DECISIONS.md wins over every other document. ARCHITECTURE.md says how the pieces fit; the atlas
-(design/atlas/this-build.html) is the UI contract.
+DECISIONS.md wins over every other document. ARCHITECTURE.md says how the pieces fit; the screen map
+(design/screen-map/this-build.html) is the UI contract.
 
 Jira key: <JIRA_KEY>-NN. First command: python3 tools/jira.py start <JIRA_KEY>-NN (moves it to In
 Progress). At the end: python3 tools/jira.py done <JIRA_KEY>-NN "<evidence>" only when the Definition
@@ -218,9 +218,9 @@ Guards, every one of them:
     fixtures, identifiers, tickets or analytics.
   - No commit and no push. Leave the work staged, show what would go in, and ask the owner.
     Approval of the work is not approval to commit.
-  - When a spec, the atlas, the constitution, a decision or the code disagree: STOP, append it to
-    docs/delivery/DISCREPANCIES.md and ask. Do not edit the spec you are implementing. The atlas
-    changes only through the parity round's "atlas was wrong" path.
+  - When a spec, the screen map, the constitution, a decision or the code disagree: STOP, append it to
+    docs/delivery/DISCREPANCIES.md and ask. Do not edit the spec you are implementing. The screen map
+    changes only through the parity round's "screen map was wrong" path.
   - No backend change. A backend item ships the client fallback design/BACKEND-SPLIT.md §3 names.
     <Sensitive paths> are used through their existing interfaces only. Never weaken <protection>
     to make a test pass.
@@ -246,8 +246,8 @@ anything surprising. The next session starts from it.
 
 Spec and range: specs/00N-<name>/spec.md — FR-001–FR-0xx.
 User stories: 1, 2 (P1), 3 (P2).
-Atlas screens this session ships (design/atlas PNGs by id). If this-build.html no longer matches
-this list, the atlas wins — put the difference in GAPS IN:
+Screens this session ships (design/screen-map PNGs by id). If this-build.html no longer matches
+this list, the screen map wins — put the difference in GAPS IN:
   - <screen-id>
   - <screen-id> — reduced (<item>): compare with <stand-in id>
 Backend: <item> ships its fallback (<fallback>) | none.
@@ -256,7 +256,7 @@ Read first, in order:
   1. specs/00N-<name>/checklists/requirements.md, then spec.md FR range and stories
   2. specs/00N-<name>/plan.md, tasks.md (phase for this session), contracts/
   3. <the existing code this replaces, file paths>
-  4. the atlas screens above
+  4. the screens above
 
 Then: set .specify/feature.json to {"feature_directory": "specs/00N-<name>"} and run
 /speckit-implement for this session's phase of tasks.md, tests first.
@@ -265,23 +265,23 @@ Watch for:
   - <A trap specific to this slice, e.g. a rule two specs state differently, with the DISCREPANCIES id.>
   - <A non-obvious requirement that sessions miss.>
 
-E2E flows (<e2e dir>/; captures by atlas id through the shot helper):
+E2E flows (<e2e dir>/; captures by screen id through the shot helper):
   - 00N_<story-slug> (Story 1)
   - 00N_<story-slug> (Story 2)
 
 Definition of done — all five steps, in this order (full text: SESSIONS.md, "Definition of done"):
   1. Tests green. Unit, and widget + golden (light/dark x text scale normal/largest x two devices,
-     named by atlas id) for every state the spec names. <test command>: coverage >= <80>% overall
+     named by screen id) for every state the spec names. <test command>: coverage >= <80>% overall
      and for every new module. Paste the output.
-  2. E2E green. A flow for every user story and every atlas screen this session implemented, at
-     every priority, targeting accessibility identifiers only, capturing every atlas screen by id.
+  2. E2E green. A flow for every user story and every screen this session implemented, at
+     every priority, targeting accessibility identifiers only, capturing every screen by id.
      Build with <capture build command>; run with tools/maestro/e2e.sh <flow> against <STAGING>
      with the synthetic account. Paste the output. A flow that cannot run is NOT RUN with its
      reason — never "passing".
-  3. Parity round. Run <atlas-compare command> --spec 00N. Start a fresh reviewer agent that did
+  3. Parity round. Run <screen-map-compare command> --spec 00N. Start a fresh reviewer agent that did
      not write this code (prompt in SESSIONS.md, "The parity reviewer"); it writes
-     design/parity/00N.md. Resolve every difference: fixed in code, or the atlas was wrong (change
-     design/atlas-src first, rebuild, record in docs/delivery/DISCREPANCIES.md). Re-capture and
+     design/parity/00N.md. Resolve every difference: fixed in code, or the screen map was wrong (change
+     design/screen-map-src first, rebuild, record in docs/delivery/DISCREPANCIES.md). Re-capture and
      re-review until <parity-check command> 00N passes.
   4. Closing review. Every caller in the graphify affected list is unchanged or tested. Review this
      session's diff, then answer "is there a simpler way?" — fewer
@@ -294,7 +294,7 @@ Report at the end:
   1. Test evidence: the three layers, named, with counts, from pasted output. Not "tests pass".
   2. Success criteria in this session's range, each mapped to the test asserting it, by number.
   3. E2E: each flow, passed or NOT RUN with the reason; the captures it wrote.
-  4. Parity: the result per screen from design/parity/00N.md; every atlas change and its
+  4. Parity: the result per screen from design/parity/00N.md; every screen map change and its
      DISCREPANCIES id.
   5. The simpler-way answer, and what went to BACKLOG.md.
   6. What was not done and why; open questions built as their recommendation; contradictions found.
@@ -342,12 +342,12 @@ or "none". Anything that blocks the next wave is listed first.
    regression this wave caused: find which session.
 2. <test command> (coverage >= <80>% overall and per module), <analyzer>, <full lint command>.
    Paste the output.
-3. Whole-wave parity sweep. Run <atlas-compare command> and <parity-check command> for every spec
+3. Whole-wave parity sweep. Run <screen-map-compare command> and <parity-check command> for every spec
    that has a parity file. Then start a fresh reviewer agent (prompt in SESSIONS.md, "The parity
    reviewer") over every screen this wave shipped, looking for drift since its own round. Re-run
    every Partial row whose missing region's spec is now built. Resolve as in the DoD, step 3.
 4. Read DISCREPANCIES.md. For each entry from this wave, propose a resolution — amend the spec,
-   amend the atlas source, or close it. Apply none without the owner; present them and wait.
+   amend the screen map source, or close it. Apply none without the owner; present them and wait.
 5. List what is NOT done, by spec: success criteria with no test, stories with no flow, screens
    with no passed parity row, flows NOT RUN. That list is the wave's real completion state.
 6. Test the seams below. They belong to no single spec, which is why nobody has tested them.
@@ -377,7 +377,7 @@ Seven things, in the report:
 3. **E2E: every flow, passed or NOT RUN with the reason**, and the captures by screen id. A story or
    screen with no flow is not done.
 4. **A parity file that passes the check**, written by a reviewer who did not write the code, with
-   every difference fixed in code or recorded as an atlas change in DISCREPANCIES.
+   every difference fixed in code or recorded as a screen map change in DISCREPANCIES.
 5. **What was skipped**, explicitly. Scope left undone is the owner's to decide about, not the
    session's to drop.
 6. **Contradictions found** — the most valuable thing a session produces and the easiest to lose.

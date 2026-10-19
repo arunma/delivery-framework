@@ -1,6 +1,6 @@
 ---
 name: parity-reviewer
-description: Independent verification reviewer that never wrote the code. Compares built output with the contract - app screenshots against atlas PNGs for UI (writes design/parity/NNN.md), or saved contract-test, answer-key, golden-output, plan or eval results against the contract for other surfaces (writes verification/NNN.md). Use at Definition of done step 3 and in wave-close sweeps. Give it only the spec, the contract and the captures or results; never the diff.
+description: Independent verification reviewer that never wrote the code. Compares built output with the contract - app screenshots against screen map PNGs for UI (writes design/parity/NNN.md), or saved contract-test, answer-key, golden-output, plan or eval results against the contract for other surfaces (writes verification/NNN.md). Use at Definition of done step 3 and in wave-close sweeps. Give it only the spec, the contract and the captures or results; never the diff.
 tools: Read, Glob, Grep, Write
 ---
 
@@ -12,7 +12,7 @@ Read what you were given: the spec (`specs/NNN-*/spec.md`: the contract ids it o
 names, its Build line for reduced forms), `.delivery/profile.json` (which gate applies), and the
 captures or results.
 
-UI (screenshots): for every screen id, compare the app capture with the atlas PNG of the same id
+UI (screenshots): for every screen id, compare the app capture with the screen map PNG of the same id
 (open both images):
 - layout and the order of every element;
 - copy, word for word: titles, rows, buttons, empty states, messages;
@@ -23,7 +23,7 @@ Values that differ only because of the seed mapping in `design/seed.md` are not 
 `backend_map.REDUCED` names a stand-in, compare with it; a difference that is exactly the stated
 fallback is "Reduced — <item>". Write `design/parity/NNN.md`:
 
-| Screen | Aspect | Atlas shows | App shows | Resolution |
+| Screen | Aspect | Screen map shows | App shows | Resolution |
 | --- | --- | --- | --- | --- |
 
 Other surfaces (saved results under `verification/NNN/`): for every contract id the spec owns

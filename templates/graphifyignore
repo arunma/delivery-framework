@@ -40,7 +40,7 @@ ios/Pods/
 android/.gradle/
 .gradle/
 
-# Design artefacts (rendered mockups, screenshots, the atlas output and its generator)
+# Design artefacts (rendered mockups, screenshots, the screen map output and its generator)
 design/
 
 # The graph itself and backups

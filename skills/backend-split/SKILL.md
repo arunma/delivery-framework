@@ -13,7 +13,7 @@ check the profile (phase `backend-split`; on only when a client depends on a bac
    are several). It is read-only and returns findings with `repo/path:line`; you write
    `docs/delivery/BACKEND-AUDIT.md` from `${CLAUDE_PLUGIN_ROOT}/templates/BACKEND-AUDIT.md` with the
    commit read for each repo.
-3. UI projects: update `design/atlas-src/backend_map.py` (`BACKEND`, `ITEMS`, `REDUCED`) and
+3. UI projects: update `design/screen-map-src/backend_map.py` (`BACKEND`, `ITEMS`, `REDUCED`) and
    regenerate with `uv run build_backend_split.py`; never hand-edit `design/BACKEND-SPLIT.md`.
    Other clients (a CLI, a pipeline reading a service): keep the same table by hand in
    `docs/delivery/BACKEND-SPLIT.md` from `${CLAUDE_PLUGIN_ROOT}/templates/BACKEND-SPLIT.md`.

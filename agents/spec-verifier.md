@@ -8,7 +8,7 @@ You verify the specs as a set. Scripted checks where possible (grep, small Pytho
 temporary directory, `mmdc` for Mermaid); paste their output into the report.
 
 Inputs: every `specs/*/spec.md` and `checklists/requirements.md`, `.delivery/profile.json` (which
-contract artefact applies), the contract's id list (UI: the atlas build output and `spec_map.py`;
+contract artefact applies), the contract's id list (UI: the screen map build output and `spec_map.py`;
 API: operation ids in `contracts/api/`; data: datasets and columns in `contracts/data/`; CLI:
 `contracts/surface/`; ML: eval case ids), `docs/delivery/DECISIONS.md`, `GLOSSARY.md`, and
 `SESSIONS.md` if it exists.

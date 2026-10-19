@@ -19,7 +19,7 @@ check the profile (phase `bootstrap`).
    `templates/CLAUDE.md`, §0 traps with symptom, cause and fix), `AGENTS.md`, `.env.example` (never
    `.env` itself; the owner fills it), conventions for keys in branches and commits.
 5. Adapt to the profile: for a non-UI surface, CLAUDE.md §0 and §5 name the contract artefact and the
-   verification gate from `.delivery/profile.json`, not the atlas and screenshots.
+   verification gate from `.delivery/profile.json`, not the screen map and screenshots.
 6. Offer to copy `${CLAUDE_PLUGIN_ROOT}/tools/` into the project's `tools/` so pasted sessions work
    without the plugin.
 

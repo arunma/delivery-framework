@@ -14,7 +14,7 @@ Templates: `${CLAUDE_PLUGIN_ROOT}/templates/DECISIONS.md`, `OPEN-QUESTIONS.md`, 
 [prompt.md](prompt.md).
 
 - **record:** write the owner's answer into DECISIONS.md the same day, dated, with the question id.
-  Then apply it: to the contract source first (atlas source, OpenAPI file, data contract), then
+  Then apply it: to the contract source first (screen map source, OpenAPI file, data contract), then
   rebuild or re-validate. Answers left in chat get lost.
 - **round:** after a planning round (specs, plans, a verification pass), collect every item the
   agents marked as needing the owner into one short list: each with its id, a recommendation and

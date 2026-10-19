@@ -16,7 +16,7 @@
   "contracts": [
     {
       "surface": "ui",
-      "contract": "Mockup atlas: design/atlas/ (source design/atlas-src/)",
+      "contract": "Screen map: design/screen-map/ (source design/screen-map-src/)",
       "gate": "Screenshot parity by an independent reviewer (design/parity/NNN.md)",
       "e2e": "Device or browser E2E on staging (Maestro, XCUITest, Espresso or Playwright)"
     }
@@ -44,14 +44,14 @@
     },
     "research": {
       "status": "on",
-      "skill": "atlas",
+      "skill": "screen-map",
       "why": "research and review before the contract"
     },
     "contract": {
       "status": "on",
-      "skill": "atlas",
-      "why": "UI: the atlas is the contract",
-      "with": "Mockup atlas"
+      "skill": "screen-map",
+      "why": "UI: the screen map is the contract",
+      "with": "Screen map"
     },
     "decisions": {
       "status": "on",
@@ -75,9 +75,9 @@
     },
     "specs": {
       "status": "on",
-      "skill": "specify-from-atlas",
+      "skill": "specify-from-contract",
       "why": "one spec per feature, citing contract ids",
-      "with": "Mockup atlas"
+      "with": "Screen map"
     },
     "verify-specs": {
       "status": "on",

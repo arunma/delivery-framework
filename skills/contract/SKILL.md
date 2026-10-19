@@ -1,6 +1,6 @@
 ---
 name: contract
-description: Phases 3 and 4 for a non-UI surface - write the contract artefact that plays the atlas's role and set up the verification gate that plays parity's role - an OpenAPI/AsyncAPI/protobuf contract with sequence diagrams for an API, a data contract with lineage, SLAs, a golden dataset and answer key for a pipeline, a public API surface with runnable examples for a CLI or library, a diagram and IaC plan for infra, an eval set with a decision rule for ML. Use when the profile's contract phase is swapped, or when someone asks to define or change an API, schema, data contract, golden dataset or eval set.
+description: Phases 3 and 4 for a non-UI surface - write the contract artefact that plays the screen map's role and set up the verification gate that plays parity's role - an OpenAPI/AsyncAPI/protobuf contract with sequence diagrams for an API, a data contract with lineage, SLAs, a golden dataset and answer key for a pipeline, a public API surface with runnable examples for a CLI or library, a diagram and IaC plan for infra, an eval set with a decision rule for ML. Use when the profile's contract phase is swapped, or when someone asks to define or change an API, schema, data contract, golden dataset or eval set.
 argument-hint: "[surface: api | data | cli | infra | ml]"
 ---
 
@@ -8,10 +8,10 @@ argument-hint: "[surface: api | data | cli | infra | ml]"
 
 Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONVENTIONS.md` first and
 check the profile (phase `contract`). Surface: `$ARGUMENTS`, or every non-UI surface in the profile.
-For a UI surface use the `atlas` skill. Templates and the decision table:
+For a UI surface use the `screen-map` skill. Templates and the decision table:
 `${CLAUDE_PLUGIN_ROOT}/templates/contracts/README.md`.
 
-The rule is the atlas's rule: **every change to the surface starts in the contract**, is validated,
+The rule is the screen map's rule: **every change to the surface starts in the contract**, is validated,
 and only then is specified and built. Specs cite the contract's ids.
 
 ## Research (tier L)

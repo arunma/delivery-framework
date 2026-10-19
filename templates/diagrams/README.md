@@ -20,7 +20,7 @@ then commit the JSON.
   project's doc check.
 - One diagram per flow; label edges with the action the person takes.
 - Name nodes by screen id where a flow crosses screens (`07-item-actions`), so a diagram can be
-  checked against the atlas.
+  checked against the screen map.
 
 ## archify
 

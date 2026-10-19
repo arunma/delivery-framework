@@ -76,7 +76,7 @@
     },
     "specs": {
       "status": "on",
-      "skill": "specify-from-atlas",
+      "skill": "specify-from-contract",
       "why": "one spec per feature, citing contract ids",
       "with": "Data contract"
     },

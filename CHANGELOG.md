@@ -16,6 +16,11 @@ All notable changes to the delivery framework plugin. Versions follow [semver](h
   recommendations; "accept all" recorded as one dated section.
 
 ### Changed
+- "Atlas" is now **screen map** (every screen as a clickable mockup with its links in and out),
+  everywhere: the skills `screen-map` and `specify-from-contract`, `tools/screen-map-starter/`
+  with `build_screen_map.py`, and the paths `design/screen-map/` and `design/screen-map-src/`. The
+  profile names the skill `screen-map`; an existing profile that says `atlas` is still read as
+  `screen-map` (`reference/CONVENTIONS.md`). Rename `design/atlas*` in a project by hand.
 - Named sessions: readable kebab-case names, `<area>-<what>`, with a step number for order
   (`### 7. labels-domain — … · KEY-12`, the key absent before tickets exist; tasks.md phases
   `## Phase 1 — labels-domain · KEY-12: …`). Wave closes are `close-<wave-name>`. `sessionize.py`,

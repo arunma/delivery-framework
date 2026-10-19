@@ -1,6 +1,6 @@
 ---
-name: specify-from-atlas
-description: Phase 9 - write one spec per feature from the contract artefact (the atlas's screen ids for UI; operation ids, dataset and column names, command names or eval case ids for other surfaces), in the house format with a Build line, Jira line, prioritised Given/When/Then stories citing contract ids, numbered FRs with backend tags, a three-layer test plan and Mermaid flows, plus a per-spec review. Use when specifying features at tier M or L, after the contract is approved.
+name: specify-from-contract
+description: Phase 9 - write one spec per feature from the contract artefact (the screen map's screen ids for UI; operation ids, dataset and column names, command names or eval case ids for other surfaces), in the house format with a Build line, Jira line, prioritised Given/When/Then stories citing contract ids, numbered FRs with backend tags, a three-layer test plan and Mermaid flows, plus a per-spec review. Use when specifying features at tier M or L, after the contract is approved.
 argument-hint: "[NNN-name or feature description]"
 ---
 

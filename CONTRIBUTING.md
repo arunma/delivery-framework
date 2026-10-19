@@ -13,7 +13,7 @@ evidence before claims, one concept with one name, and nothing resolved silently
    (`FRAMEWORK.md`), the gate (`CHECKLIST.md`), the prompt (`skills/<name>/prompt.md`), the template (`templates/`)
    and sometimes a tool (`tools/`). A pull request that changes one and leaves the others
    contradicting it will be asked to finish the job, or to record the gap.
-3. **Keep the vocabulary.** Use the existing names (atlas, screen id, session, wave, parity round,
+3. **Keep the vocabulary.** Use the existing names (screen map, screen id, session, wave, parity round,
    Definition of done, GAPS IN, HANDOFF). Do not introduce a synonym for an existing concept.
 4. **Prove tool changes.** For `tools/`, paste the output of the offline checks in the pull
    request:
@@ -21,7 +21,7 @@ evidence before claims, one concept with one name, and nothing resolved silently
      a token);
    - `python3 tools/create_tickets.py --dry-run` against a sample `SESSIONS.md` and
      `tools/samples/backend-items.json`;
-   - `uv run render_parts.py` and `uv run build_atlas.py --strict` in `tools/atlas-starter/`;
+   - `uv run render_parts.py` and `uv run build_screen_map.py --strict` in `tools/screen-map-starter/`;
    - `python3 -m unittest discover -s tests` (hooks, `assess.py`, `sessionize.py`) and
      `claude plugin validate --strict .` for any change to the plugin's skills, commands, agents,
      hooks or manifests. A change to `assess.py` that alters a fixture's profile updates

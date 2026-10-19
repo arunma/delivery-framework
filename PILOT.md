@@ -55,8 +55,8 @@ Every number links to a ticket, a PR or a file.
    with the owner.
 2. Test the guards: ask the agent to `git commit` (it must be blocked) and to `cat .env` (it must ask
    first). Add a production pattern and check it is caught.
-3. For the pilot slice only: write the contract (`/delivery:atlas` or `/delivery:contract`), then
-   `/delivery:specify-from-atlas`, `/delivery:verify-specs`, `/delivery:plan-and-tasks`. The owner
+3. For the pilot slice only: write the contract (`/delivery:screen-map` or `/delivery:contract`), then
+   `/delivery:specify-from-contract`, `/delivery:verify-specs`, `/delivery:plan-and-tasks`. The owner
    approves each.
 4. `/delivery:jira-sync` as a dry run. Record baseline numbers from comparable past work.
 5. Create the wave branch, `wave/<closing key>-<wave-name>`, from an up-to-date main. Every pilot
@@ -99,7 +99,7 @@ later use.
 | Untracked specs or mockups overwritten | An agent rewrote files with no git history | Back up before every change; the skills do it first |
 | Parallel planning agents step on each other | Shared files and branch-switching scripts | Each writes only its own spec folder; one main session merges; check `git status` |
 | Every dependency link in Jira is backwards | The tracker's link payload is inverted | `create_tickets.py` handles it; check one pair by hand |
-| Links in the mockups go to the wrong screen | Two screen ids share a prefix | `build_atlas.py --strict` fails on it |
+| Links in the mockups go to the wrong screen | Two screen ids share a prefix | `build_screen_map.py --strict` fails on it |
 | Different screens show different facts | Each part invented its own sample data | One facts block in the kit |
 | A session block fails when run on its own | It said "see above" | Every block repeats its guards in full |
 | "Done" with nothing pasted | The session summarised instead of proving | Reject it, send it back, count it as rework |

@@ -33,9 +33,10 @@ flowchart LR
   V --> W["Close the batch"]
 ```
 
-The **contract** depends on what you're building: clickable mockups of every screen for an app, an
-API contract (OpenAPI) for a service, a data contract plus a small known dataset with its expected
-output for a data pipeline, and so on. Every spec points at the part of the contract it builds.
+The **contract** depends on what you're building. For an app it is a screen map: every screen as a
+clickable mockup with its links in and out (a wireflow plus a screen inventory). For a service it is
+an API contract (OpenAPI); for a data pipeline, a data contract plus a small known dataset with its
+expected output; and so on. Every spec points at the part of the contract it builds.
 
 How much of this runs depends on the size of the work. A **small** project (one ticket) goes straight
 to a PR. A **medium** one gets a short spec and plan first. A **large** one gets the full flow above:
@@ -81,9 +82,9 @@ It writes `.delivery/profile.json`, a readable `.delivery/PROFILE.md`, and `.del
 
 ```
 /delivery:bootstrap-brownfield   # reads the code, writes CLAUDE.md, ARCHITECTURE.md, open questions
-/delivery:atlas                  # clickable mockups of every screen
+/delivery:screen-map             # clickable mockups of every screen
 /delivery:contract api           # the API contract
-/delivery:specify-from-atlas     # one spec per feature, citing screen and operation ids
+/delivery:specify-from-contract  # one spec per feature, citing screen and operation ids
 /delivery:plan-and-tasks         # a plan per spec, tasks grouped by session
 /delivery:sessionize             # SESSIONS.md: one ready-to-run prompt per session
 /delivery:jira-sync              # one ticket per session

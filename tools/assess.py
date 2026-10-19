@@ -52,8 +52,8 @@ SENSITIVE = ("encrypt", "crypto", "keychain", "secure_storage", "securestore", "
 REGULATED = ("hipaa", "gdpr", "pci-dss", "pci dss", "sox ", "fhir", "hl7", "finra", "psd2", "ferpa")
 
 SURFACES = {
-    "ui": {"contract": "Mockup atlas: design/atlas/ (source design/atlas-src/)",
-           "contract_skill": "atlas",
+    "ui": {"contract": "Screen map: design/screen-map/ (source design/screen-map-src/)",
+           "contract_skill": "screen-map",
            "gate": "Screenshot parity by an independent reviewer (design/parity/NNN.md)",
            "e2e": "Device or browser E2E on staging (Maestro, XCUITest, Espresso or Playwright)",
            "baseline": "Screenshots of today's app (design/before/)"},
@@ -219,14 +219,14 @@ def phases(surfaces, track, tier, flags):
     else:
         p["capture-before"] = ph("swapped", "capture-before", "brownfield: baseline per surface",
                                  " + ".join(SURFACES[s]["baseline"] for s in surfaces))
-    p["research"] = ph("on" if big else "off", "atlas" if "ui" in surfaces else "contract",
+    p["research"] = ph("on" if big else "off", "screen-map" if "ui" in surfaces else "contract",
                        "research and review before the contract" if big else "not for tier S/M")
     if not mid:
         p["contract"] = ph("off", "contract", "tier S changes no contract; escalate to M if it does")
     elif surfaces == ["ui"]:
-        p["contract"] = ph("on", "atlas", "UI: the atlas is the contract", contract_with)
+        p["contract"] = ph("on", "screen-map", "UI: the screen map is the contract", contract_with)
     else:
-        p["contract"] = ph("swapped", "atlas" if "ui" in surfaces else "contract",
+        p["contract"] = ph("swapped", "screen-map" if "ui" in surfaces else "contract",
                            "the contract artefact is the source of truth", contract_with)
     p["decisions"] = ph("on" if mid else "off", "decisions", "decisions, open questions, glossary, discrepancies")
     p["backend-split"] = ph("on" if mid and flags["backend_dependencies"] else "off", "backend-split",
@@ -235,7 +235,7 @@ def phases(surfaces, track, tier, flags):
     p["constitution"] = ph("on" if big else "off", "constitution", "principles for a large piece of work"
                            if big else "use the existing constitution, if any")
     p["architecture"] = ph("on" if big else "off", "architecture", "graph and diagrams" if big else "not for tier S/M")
-    p["specs"] = ph("on" if mid else "off", "specify-from-atlas", "one spec per feature, citing contract ids",
+    p["specs"] = ph("on" if mid else "off", "specify-from-contract", "one spec per feature, citing contract ids",
                     contract_with if mid else None)
     p["verify-specs"] = ph("on" if mid else "off", "verify-specs", "coverage and cross-references")
     p["plans"] = ph("on" if mid else "off", "plan-and-tasks", "plan grounded in code, tasks by session")

@@ -10,7 +10,7 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONV
 Arguments: `$ARGUMENTS`.
 
 The framework's phases assume a UI by default. Most projects are not only UI. This step decides,
-from evidence, which contract artefact plays the atlas's role and which verification gate plays
+from evidence, which contract artefact plays the screen map's role and which verification gate plays
 parity's role, so no later skill draws screens for a data pipeline.
 
 ## Steps
@@ -34,13 +34,13 @@ parity's role, so no later skill draws screens for a data pipeline.
    production guard off until patterns are set). Suggest adding `.delivery/APPROVED` to `.gitignore`.
 7. **Report** in at most 12 lines: surfaces and their contract artefacts, the verification gate per
    surface, track, tier, risk flags, the phases that are off or swapped and why, and the next skill to
-   run (the track's bootstrap for tier L, `specify-from-atlas` for M, `run-session` for S).
+   run (the track's bootstrap for tier L, `specify-from-contract` for M, `run-session` for S).
 
 ## Surface decision table
 
-| Surface | Contract artefact (atlas role) | Verification gate (parity role) | E2E |
+| Surface | Contract artefact (screen map's role) | Verification gate (parity role) | E2E |
 | --- | --- | --- | --- |
-| UI | Mockup atlas | Screenshot parity, independent reviewer | Device or browser E2E on staging |
+| UI | Screen map | Screenshot parity, independent reviewer | Device or browser E2E on staging |
 | API/service | OpenAPI/AsyncAPI/protobuf + sequence diagrams | Contract and consumer-driven tests, contract diff | API tests, ephemeral or staging env |
 | Data/pipeline | Data contract: schemas, dictionary, lineage, SLAs | Output equals the answer key; quality checks; reproducible | Run on the golden dataset |
 | CLI/library | Public API surface + usage examples | Doctests, golden CLI output, semver check | Golden CLI runs |

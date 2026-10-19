@@ -161,7 +161,7 @@ def render(ph, mapping, block, sets, step, branch):
     b = b.replace("--spec 00N", f"--spec {ph['spec'][:3]}").replace("parity/00N", f"parity/{ph['spec'][:3]}")
     b = b.replace("check> 00N", f"check> {ph['spec'][:3]}")
     if screens:
-        b = re.sub(r"(Atlas screens this session ships.*?\n)(  - <screen-id>\n)+(  - <screen-id> — reduced.*?\n)?",
+        b = re.sub(r"(Screens this session ships.*?\n)(  - <screen-id>\n)+(  - <screen-id> — reduced.*?\n)?",
                    lambda m: m.group(1) + "".join(f"  - {s}\n" for s in screens), b, flags=re.S)
     if flows:
         b = re.sub(r"(E2E flows \(.*?\n)(  - 00N_.*?\n)+",

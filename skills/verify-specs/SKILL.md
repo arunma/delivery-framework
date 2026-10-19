@@ -10,7 +10,7 @@ check the profile (phase `verify-specs`).
 
 Delegate to the `spec-verifier` agent (fresh context) with this task, then read its report:
 
-1. **Contract coverage:** every contract id (atlas screen ids from the atlas build; operation ids from
+1. **Contract coverage:** every contract id (screen ids from the screen map build; operation ids from
    the API contract; datasets and columns from the data contract; commands; resources; eval cases) is
    cited by an FR of its owning spec, and no spec cites an id that does not exist.
 2. **Cross-references:** every `NNN FR-xxx` resolves; no duplicate FR ids; checklist counts current.

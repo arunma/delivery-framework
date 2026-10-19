@@ -10,7 +10,7 @@ __pycache__/
 node_modules/
 
 # Generated output
-tools/atlas-starter/out/
+tools/screen-map-starter/out/
 out/
 jira-map.json
 

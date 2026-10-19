@@ -1,4 +1,4 @@
-"""Back up the atlas source before every change.
+"""Back up the screen map source before every change.
 
     uv run backup.py            -> out/backups/<YYYYmmdd-HHMMSS>.tar.gz
 

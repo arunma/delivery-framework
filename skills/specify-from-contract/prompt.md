@@ -18,7 +18,7 @@ Greenfield: tell it to cite `design/research.md` and the decisions in the Overvi
 ## 9b · Per-spec UI review only (if the spec exists already)
 
 ```
-Review the atlas screens owned by spec <NNN> (list them with spec_map.spec_of) against
+Review the screens owned by spec <NNN> (list them with spec_map.spec_of) against
 specs/<NNN-name>/spec.md, DECISIONS.md and GLOSSARY.md. Write design/ui-review/<NNN>.md: for each
 screen, 1–3 findings (clarity, copy, consistency, accessibility, realism, missing state), each with
 a severity (High/Med/Low), the backend tag from backend_map.py, and its resolution: Spec (fixed in
@@ -47,7 +47,7 @@ session ranges from SESSIONS.md "Spec and range" lines when it exists; Jira keys
 docs/delivery/jira-map.json). Write docs/delivery/SPEC-VERIFICATION.md:
 Part A — decisions applied: each decision → where it now lives (spec · FR).
 Part B — checks, each with "before fixes" and "after":
-  1. Screen coverage: every atlas id cited by an FR of its owning spec; cited ids that do not exist.
+  1. Screen coverage: every screen id cited by an FR of its owning spec; cited ids that do not exist.
   2. Cross-references: every NNN FR-xxx resolves; duplicate FR ids; checklist FR counts current.
   3. [OPEN: …] markers still present for answered questions.
   4. Build lines vs backend_map.py (every tagged item named).

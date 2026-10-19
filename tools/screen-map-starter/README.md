@@ -1,9 +1,9 @@
-# Atlas starter kit
+# Screen map starter kit
 
-A small, runnable skeleton of the mockup atlas generator (framework phase 4). Mockups are HTML built
-from one kit, rendered to PNG at device size, and gathered into an atlas page that shows every
+A small, runnable skeleton of the screen map generator (framework phase 4). Mockups are HTML built
+from one kit, rendered to PNG at device size, and gathered into a screen map page that shows every
 screen with its id, purpose, where it is reached from, where each control goes, and its backend
-dependency. The atlas is the UI contract: specs cite its screen ids.
+dependency. The screen map is the UI contract: specs cite its screen ids.
 
 ## Files
 
@@ -14,9 +14,9 @@ dependency. The atlas is the UI contract: specs cite its screen ids.
 | `spec_map.py` | Which spec owns each screen id (`RULES`, first match wins). A screen no spec owns fails the build. |
 | `backend_map.py` | `BACKEND` (screen → backend items), `ITEMS` (item → fallback, sessions, `later`), `REDUCED` (full screen → reduced stand-in). |
 | `render_parts.py` | Renders every part to `out/html/<id>.html` and `out/png/<id>.png` with Playwright. |
-| `build_atlas.py` | Writes `out/atlas/index.html` (every screen) and `out/atlas/this-build.html` (deferred screens removed, reduced stand-ins swapped in). |
+| `build_screen_map.py` | Writes `out/screen-map/index.html` (every screen) and `out/screen-map/this-build.html` (deferred screens removed, reduced stand-ins swapped in). |
 | `build_backend_split.py` | Generates `out/BACKEND-SPLIT.md` from the maps: client-only, reduced, deferred, critical. |
-| `backup.py` | Tars the atlas source into `out/backups/<timestamp>.tar.gz`. |
+| `backup.py` | Tars the screen map source into `out/backups/<timestamp>.tar.gz`. |
 
 Put "before" screenshots in `before/<name>.png` and set `before='<name>'` on a `Screen` to show
 today's screen beside the proposal.
@@ -28,12 +28,12 @@ uv sync
 uv run playwright install chromium   # once per machine
 uv run backup.py                     # before every change
 uv run render_parts.py [part ...]    # e.g. uv run render_parts.py p2_home
-uv run build_atlas.py [--strict]     # --strict also fails on links to undrawn screens
+uv run build_screen_map.py [--strict]     # --strict also fails on links to undrawn screens
 uv run build_backend_split.py
-open out/atlas/index.html
+open out/screen-map/index.html
 ```
 
-`build_atlas.py` exits non-zero on a duplicate id, an ambiguous link target (a prefix that matches
+`build_screen_map.py` exits non-zero on a duplicate id, an ambiguous link target (a prefix that matches
 more than one id), a screen with no owning spec, or a backend item missing from `ITEMS`.
 
 ## Rules
