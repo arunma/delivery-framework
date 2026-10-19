@@ -8,7 +8,7 @@ description: Phase 6 - audit the backend with file:line evidence and classify ev
 Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONVENTIONS.md` first and
 check the profile (phase `backend-split`; on only when a client depends on a backend).
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/prompts/06-backend.md` and run it.
+1. Read [prompt.md](prompt.md) and run it.
 2. Delegate the audit to the `backend-auditor` agent, once per backend repo (in parallel when there
    are several). It is read-only and returns findings with `repo/path:line`; you write
    `docs/delivery/BACKEND-AUDIT.md` from `${CLAUDE_PLUGIN_ROOT}/templates/BACKEND-AUDIT.md` with the

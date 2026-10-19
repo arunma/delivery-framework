@@ -12,7 +12,7 @@ check the profile: run only if `ui` is in `surfaces` and the `contract` phase is
 
 ## Research and review first (phase 3, tier L)
 
-Run `${CLAUDE_PLUGIN_ROOT}/prompts/03-research-and-review.md`: `design/research.md` (every claim
+Run [research.md](research.md): `design/research.md` (every claim
 sourced or marked unverified), `design/review.md` for brownfield, and at least one independent
 design review by the `design-reviewer` agent, which did not draw the screens.
 
@@ -28,7 +28,7 @@ design review by the `design-reviewer` agent, which did not draw the screens.
 
 1. `uv run backup.py` first. Always.
 2. `kit.py` is the only styling source and holds the one seed facts block; one agent owns it. Part
-   authors each own one `parts/pN_*.py` (brief in `${CLAUDE_PLUGIN_ROOT}/prompts/04-atlas.md`).
+   authors each own one `parts/pN_*.py` (brief in [prompt.md](prompt.md)).
 3. `uv run render_parts.py [part]`, then open every PNG and look at it.
 4. `uv run build_atlas.py --strict`: 0 duplicate ids, 0 ambiguous prefixes, 0 unowned screens, and
    0 unresolved links or a reason for each.

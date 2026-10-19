@@ -12,9 +12,9 @@ BACKEND = {
 
 ITEMS = {
     'B1': dict(title='Share list per item', where='api', status='missing',
-               fallback='Hide the sharing row and show a note', sessions=['S03a'], later=False),
+               fallback='Hide the sharing row and show a note', sessions=['sharing-row'], later=False),
     'B2': dict(title='Audited delete', where='api', status='missing',
-               fallback=None, sessions=['S03b'], later=True),
+               fallback=None, sessions=['delete-audit'], later=True),
 }
 
 REDUCED = {'S-01-item-detail': 'S-01b-item-detail-reduced'}

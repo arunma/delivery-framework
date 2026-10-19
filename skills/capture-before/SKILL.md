@@ -13,7 +13,7 @@ and approves deleting old test data.
 
 ## UI (status `on`)
 
-Read `${CLAUDE_PLUGIN_ROOT}/prompts/02-capture-before.md` and run it. Use
+Read [prompt.md](prompt.md) and run it. Use
 `${CLAUDE_PLUGIN_ROOT}/templates/seed.md` for `design/seed.md`,
 `${CLAUDE_PLUGIN_ROOT}/tools/maestro/capture_before.yaml` as the flow pattern and
 `${CLAUDE_PLUGIN_ROOT}/tools/maestro/e2e.sh` as the wrapper (it passes credentials with `-e` and

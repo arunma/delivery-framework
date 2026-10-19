@@ -18,7 +18,7 @@ printed (skills get it substituted; this file is read as plain text).
 ## 2. Paths
 
 - Plugin files: `${CLAUDE_PLUGIN_ROOT}/FRAMEWORK.md` (the full guide), `${CLAUDE_PLUGIN_ROOT}/CHECKLIST.md`
-  (the gates), `${CLAUDE_PLUGIN_ROOT}/prompts/`, `${CLAUDE_PLUGIN_ROOT}/templates/`,
+  (the gates), `${CLAUDE_PLUGIN_ROOT}/skills/<name>/` (each skill's prompt), `${CLAUDE_PLUGIN_ROOT}/templates/`,
   `${CLAUDE_PLUGIN_ROOT}/tools/`.
 - Tools: if the project has its own copy in `tools/` (the framework recommends copying them so
   sessions pasted without the plugin still work), use it. Otherwise call the plugin's copy, for
@@ -38,6 +38,8 @@ printed (skills get it substituted; this file is read as plain text).
   `docs/delivery/DISCREPANCIES.md` (template `${CLAUDE_PLUGIN_ROOT}/templates/DISCREPANCIES.md`),
   and ask. Never resolve it silently. Never edit the spec you are implementing.
 - Back up untracked documents (specs, atlas source, contracts) before an agent rewrites them.
+- Agents running in parallel never write the same file. Each writes its own (its own discrepancy
+  file, its own spec folder); one session merges them afterwards.
 - Never weaken a protection (screen security, auth, validation) to make a test pass.
 
 ## 4. Evidence
@@ -51,7 +53,14 @@ If `graphify-out/graph.json` is older than the last commit, run `graphify update
 calls). Query the graph (`graphify query`, `path`, `explain`, `affected`) before broad file reads.
 Call edges can be incomplete; confirm callers with grep or the language server.
 
-## 6. Tiers
+## 6. Restart prompt
+
+At the end of every major step (contract, a decisions round, specs, plans, sessions, tracker, each
+wave close), write or refresh `docs/RESTART.md` from `${CLAUDE_PLUGIN_ROOT}/templates/RESTART-PROMPT.md`:
+a paste-able block that resumes the work in a fresh session, then the state, map, decisions, traps
+and open items. The SessionStart hook shows it at the start of every session.
+
+## 7. Tiers
 
 `tier` in the profile sets how much of the pipeline runs: **S** = ticket → test-first change → PR,
 **M** = a spec and a plan, then one session, **L** = the full pipeline with waves. A skill whose phase

@@ -65,7 +65,7 @@ branch, commit subject and code comments; no markdown TODO lists) into CLAUDE.md
 tickets yet.
 
 ## Step 5 — Capture the before (if the owner has given a staging account)
-Follow the framework's prompts/02-capture-before.md: synthetic seed (never real data), staging
+Follow the framework's skills/capture-before/prompt.md: synthetic seed (never real data), staging
 only, a synthetic account, an E2E capture flow, a test-only capture switch if the app blocks
 screenshots (a no-op in production, with a test). Open every screenshot and look at it. If there is
 no staging account yet, write the plan and the owner task instead.

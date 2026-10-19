@@ -8,7 +8,7 @@ description: Phase 7 - draft or amend the project constitution at .specify/memor
 Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONVENTIONS.md` first and
 check the profile (phase `constitution`).
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/prompts/07-constitution.md` and
+1. Read [prompt.md](prompt.md) and
    `${CLAUDE_PLUGIN_ROOT}/templates/constitution.md`.
 2. Product principles first (what the product promises its users), then the framework floor.
 3. **XI. The contract artefact is the source of truth:** name every artefact from the profile's

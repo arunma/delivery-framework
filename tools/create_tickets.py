@@ -8,6 +8,7 @@
 SESSIONS.md format (see templates/SESSIONS.md):
   ## <Wave name>                                   sets the wave for the sessions below it
   ### <ID> · <summary> [· <KEY>-<n>]               one session; a trailing key means it exists
+  ### <step>. <name> — <summary> [· <KEY>-<n>]     the same, with a kebab-case name as the id
   *Depends on: <ID>, <ID>. Branch: `...`. Epic: <EPIC>.*   first non-blank line, every clause optional
 
 Backend items file: a JSON list of
@@ -28,6 +29,7 @@ import jira  # noqa: E402
 
 HEAD = re.compile(r"^###\s+(.+?)\s*$")
 KEY = re.compile(r"^[A-Z][A-Z0-9]+-\d+$")
+NAMED = re.compile(r"^\d+\.\s+`?([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`?\s+—\s*(.*)$")
 
 
 def parse_sessions(text):
@@ -44,13 +46,18 @@ def parse_sessions(text):
             wave = line[3:].strip()
             continue
         m = HEAD.match(line)
-        if not m or " · " not in m.group(1):
+        named = NAMED.match(m.group(1)) if m else None
+        if not m or (" · " not in m.group(1) and not named):
             continue
         parts = [p.strip() for p in m.group(1).split(" · ")]
         sid, rest = parts[0].strip("`"), parts[1:]
+        if named:
+            sid, rest = named.group(1), [NAMED.match(parts[0]).group(2)] + rest
         key = None
         if len(rest) > 1 and KEY.match(rest[-1]):
             key = rest.pop()
+        elif len(rest) > 1 and re.fullmatch(r"<[A-Z_]+>-NN", rest[-1]):
+            rest.pop()  # the key placeholder before tickets exist
         s = {"id": sid, "summary": " · ".join(rest), "key": key, "wave": wave, "deps": [],
              "epic": None, "branch": None}
         for nxt in lines[i + 1:]:

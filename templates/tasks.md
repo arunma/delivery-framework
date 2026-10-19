@@ -2,17 +2,18 @@
 
 <!-- Guidance: written by the plan-writer (spec-kit /speckit.tasks shape) in specs/NNN-name/tasks.md.
 One phase per session, in SESSIONS.md order. tools/sessionize.py reads:
-  - the phase heading: "## Phase <n>: Session <ID> · <what a person can do when it is done>"
-  - an optional "**Depends on**: <ID>, <ID>" line under it (default: the previous session of this spec)
+  - the phase heading: "## Phase <n> — <name> · <JIRA_KEY>-NN: <what a person can do when it is done>",
+    where <name> is the session's kebab-case name in SESSIONS.md (old "Session S01 · …" still parses)
+  - an optional "**Depends on**: <name>, <name>" line under it (default: the previous session of this spec)
   - task lines "- [ ] T001 [P] [US1] Description (FR-001, FR-002) in path/to/file"
 and, from plan.md, the "Session mapping" table (Session | FRs | Stories | Screens | E2E flows).
 Never renumber a task; withdraw it with a line through it and a reason. -->
 
-**Input**: specs/<NNN-name>/spec.md, plan.md · **Sessions**: S01, S02
+**Input**: specs/<NNN-name>/spec.md, plan.md · **Sessions**: widgets-domain, widgets-screens
 
-## Phase 1: Session S01 · <What a person can do when this session is done>
+## Phase 1 — widgets-domain · <JIRA_KEY>-NN: <What a person can do when this session is done>
 
-**Depends on**: F1
+**Depends on**: foundation-flag
 
 ### Start
 - [ ] T001 `python3 tools/jira.py start <JIRA_KEY>-NN`; write the GAPS IN list
@@ -34,9 +35,9 @@ Never renumber a task; withdraw it with a line through it and a reason. -->
 - [ ] T011 Lint and analysis clean; diagrams current
 - [ ] T012 HANDOFF.md if work remains; `jira.py done` or `comment`; stage and ask
 
-## Phase 2: Session S02 · <What a person can do when this session is done>
+## Phase 2 — widgets-screens · <JIRA_KEY>-NN: <What a person can do when this session is done>
 
-**Depends on**: S01
+**Depends on**: widgets-domain
 
 ### Start
 - [ ] T013 `python3 tools/jira.py start <JIRA_KEY>-NN`; start from HANDOFF.md; GAPS IN

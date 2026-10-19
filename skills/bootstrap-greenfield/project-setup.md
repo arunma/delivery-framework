@@ -22,6 +22,8 @@ Owner: create the project `<JIRA_KEY>`, one epic per feature area, and an API to
 Check the tracker setup for <PROJECT>. Confirm .env is gitignored (git check-ignore .env). Run
 python3 tools/jira.py show <EPIC> and report the summary line only — never print the token or user.
 Write CLAUDE.md §3: project <JIRA_KEY>, epics (key and name), the initiative label <INITIATIVE>, the
-key in branch names (feat/<JIRA_KEY>-NN-slug), commit subjects (<JIRA_KEY>-NN: …) and code comments,
+key in wave branch names (one branch per wave, wave/<closing key>-<wave-name>, the key of the wave's
+close session), commit subjects (<JIRA_KEY>-NN: …, one commit per session, made by the owner) and code
+comments, one push and one PR per wave after its close,
 scratch TODOs in <scratch tracker>, no markdown TODO lists. Create no tickets. Commit nothing.
 ```

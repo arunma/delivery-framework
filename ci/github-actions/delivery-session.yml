@@ -1,12 +1,14 @@
 # EXAMPLE FOR THE PILOT. Copy to .github/workflows/delivery-session.yml in the PROJECT repo (not this
 # one), read every line, and adapt it. It has not been run against your repository.
 #
-# What it does: when an issue gets the label `delivery:ready` (or someone runs it by hand with a
-# session id), it checks out a branch named after the ticket key, runs the delivery plugin's
-# run-session skill headless with Claude Code, commits whatever the session STAGED to that branch,
-# and opens a pull request. Claude never commits or pushes: the plugin's git guard blocks it. The
-# workflow commits on the owner's behalf only to a review branch, and the pull request is the
-# owner's approval step. Nothing merges automatically.
+# What it does: someone runs it by hand (workflow_dispatch) with a session name and the wave branch
+# the owner already created (`wave/<closing key>-<wave-name>`). It checks out that branch, runs the
+# delivery plugin's run-session skill headless with Claude Code, commits whatever the session STAGED
+# as the session's one commit on the wave branch, pushes the branch, and opens the wave's draft pull
+# request if it has none yet. It never creates a branch: one branch, one push target and one pull
+# request per wave. Claude never commits or pushes: the plugin's git guard blocks it. The workflow
+# commits on the owner's behalf only to the wave branch, and the wave's pull request is the owner's
+# approval step. Nothing merges automatically.
 #
 # Never point this at production. The runner gets staging configuration and synthetic test
 # accounts only; production secrets must not exist in this repository's Actions secrets.
@@ -17,68 +19,59 @@
 #   JIRA_SITE, JIRA_USER, JIRA_TOKEN   optional; without them the session records Jira as NOT RUN
 #   STAGING_*                optional; staging-only settings your integration tests need
 #
-# Issue convention: the title starts with the session id and contains the ticket key, e.g.
-#   "S03 · A person can export a list · ABC-42"
-# Ids are validated against a strict pattern before use; issue text is never interpolated into a
-# shell command.
+# Inputs are validated against strict patterns before use and are never interpolated into a shell
+# command; they reach the shell only as quoted environment variables.
 
 name: delivery-session
 
 on:
-  issues:
-    types: [labeled]
   workflow_dispatch:
     inputs:
-      session_id:
-        description: "Session id from SESSIONS.md (e.g. S03), or a ticket key for a tier-S change"
+      session:
+        description: "Session name from SESSIONS.md (e.g. labels-domain), or a ticket key for a small change"
         required: true
       ticket_key:
-        description: "Tracker key (e.g. ABC-42); used for the branch name"
+        description: "The session's tracker key (e.g. ABC-42); used for the commit subject"
+        required: true
+      wave_branch:
+        description: "The existing wave branch (e.g. wave/ABC-50-labels); the session commits to it"
         required: true
 
 concurrency:
-  group: delivery-session-${{ github.event.issue.number || github.event.inputs.session_id }}
+  # One session at a time per wave: sessions in a wave share its branch.
+  group: delivery-session-${{ github.event.inputs.wave_branch }}
   cancel-in-progress: false
 
 jobs:
   session:
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'delivery:ready'
     runs-on: ubuntu-latest
     timeout-minutes: 90
-    # Least privilege for this job: push the branch, open the PR, comment on the issue.
+    # Least privilege for this job: push the wave branch, open its PR.
     # id-token: write is required by claude-code-action's default GitHub App authentication.
     permissions:
       contents: write
       pull-requests: write
-      issues: write
       id-token: write
     env:
-      ISSUE_TITLE: ${{ github.event.issue.title }}
-      IN_SESSION: ${{ github.event.inputs.session_id }}
+      IN_SESSION: ${{ github.event.inputs.session }}
       IN_KEY: ${{ github.event.inputs.ticket_key }}
+      IN_BRANCH: ${{ github.event.inputs.wave_branch }}
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Resolve session id, ticket key and branch
+      - name: Validate the session name, ticket key and wave branch
         id: ids
         run: |
           set -eu
-          if [ -n "${IN_SESSION:-}" ]; then
-            sid="$IN_SESSION"; key="$IN_KEY"
-          else
-            sid=$(printf '%s' "$ISSUE_TITLE" | sed -n 's/^\([A-Za-z][A-Za-z0-9·]*\) · .*/\1/p')
-            key=$(printf '%s' "$ISSUE_TITLE" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' | tail -1 || true)
-          fi
-          printf '%s' "$sid" | grep -qE '^[A-Za-z][A-Za-z0-9·]{0,20}$' || { echo "bad session id"; exit 1; }
-          printf '%s' "$key" | grep -qE '^[A-Z][A-Z0-9]+-[0-9]+$' || { echo "bad ticket key"; exit 1; }
-          echo "sid=$sid" >> "$GITHUB_OUTPUT"
-          echo "key=$key" >> "$GITHUB_OUTPUT"
-          echo "branch=feat/$key-session-$(printf '%s' "$sid" | tr -cd 'A-Za-z0-9' | tr 'A-Z' 'a-z')" >> "$GITHUB_OUTPUT"
+          printf '%s' "$IN_SESSION" | grep -qE '^[A-Za-z][A-Za-z0-9-]{0,47}$' || { echo "bad session name"; exit 1; }
+          printf '%s' "$IN_KEY" | grep -qE '^[A-Z][A-Z0-9]+-[0-9]+$' || { echo "bad ticket key"; exit 1; }
+          printf '%s' "$IN_BRANCH" | grep -qE '^wave/[A-Z][A-Z0-9]+-[0-9]+-[a-z0-9][a-z0-9-]{0,47}$' || { echo "bad wave branch"; exit 1; }
+          echo "session=$IN_SESSION" >> "$GITHUB_OUTPUT"
+          echo "key=$IN_KEY" >> "$GITHUB_OUTPUT"
+          echo "branch=$IN_BRANCH" >> "$GITHUB_OUTPUT"
 
-      - name: Create the session branch
-        run: git checkout -b "${{ steps.ids.outputs.branch }}"
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.ids.outputs.branch }}
+          fetch-depth: 0
 
       - name: Run the session headless
         uses: anthropics/claude-code-action@v1
@@ -90,26 +83,31 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           plugin_marketplaces: "https://github.com/arunma/delivery-framework.git"
           plugins: "delivery@delivery-framework"
-          prompt: "/delivery:session ${{ steps.ids.outputs.sid }} --ci"
+          prompt: "/delivery:session ${{ steps.ids.outputs.session }} --ci"
           # Adapt the allowed tools to the project's test, lint and build commands. git commit and
           # git push are blocked by the plugin's git guard regardless.
           claude_args: |
             --max-turns 200
             --allowedTools "Read,Write,Edit,Glob,Grep,Bash(git status*),Bash(git diff*),Bash(git add*),Bash(python3 *),Bash(graphify *),Bash(make *),Bash(npm test*),Bash(pytest*)"
 
-      - name: Commit the staged work to the session branch and open a pull request
+      - name: Commit the session to the wave branch and open the wave's pull request
         env:
           GH_TOKEN: ${{ github.token }}
+          SESSION: ${{ steps.ids.outputs.session }}
+          KEY: ${{ steps.ids.outputs.key }}
+          BRANCH: ${{ steps.ids.outputs.branch }}
+          BASE: ${{ github.event.repository.default_branch }}
         run: |
           set -eu
           if git diff --cached --quiet; then
-            echo "The session staged nothing; no pull request." ; exit 0
+            echo "The session staged nothing; nothing to commit." ; exit 0
           fi
           git config user.name "delivery-session-bot"
           git config user.email "delivery-session-bot@users.noreply.github.com"
-          git commit -m "${{ steps.ids.outputs.key }}: session ${{ steps.ids.outputs.sid }} (staged by the delivery session; review before merge)"
-          git push -u origin "${{ steps.ids.outputs.branch }}"
-          gh pr create --draft --base "${{ github.event.repository.default_branch }}" \
-            --head "${{ steps.ids.outputs.branch }}" \
-            --title "${{ steps.ids.outputs.key }}: session ${{ steps.ids.outputs.sid }}" \
-            --body "Draft opened by the delivery-session workflow (pilot). The session report is in the workflow run log. A person reviews the evidence, the verification file and the diff before marking it ready."
+          git commit -m "$KEY: $SESSION (staged by the delivery session; review before merge)"
+          git push origin "$BRANCH"
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --draft --base "$BASE" --head "$BRANCH" \
+              --title "$BRANCH" \
+              --body "Draft opened by the delivery-session workflow (pilot) for the whole wave. Each session is one commit; the session reports are in the workflow run logs. A person reviews the evidence, the verification files and the diff, and marks it ready after the wave's close."
+          fi

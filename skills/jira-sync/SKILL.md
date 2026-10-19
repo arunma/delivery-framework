@@ -8,7 +8,7 @@ argument-hint: "[--dry-run | create | dashboard]"
 
 Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONVENTIONS.md` first and
 check the profile (phase `tracker`). Mode: `$ARGUMENTS` (default: dry run). Prompts:
-`${CLAUDE_PLUGIN_ROOT}/prompts/12-jira.md`.
+[prompt.md](prompt.md).
 
 Credentials are `JIRA_SITE`, `JIRA_USER`, `JIRA_TOKEN` in the environment or the project's `.env`
 (gitignored; the owner fills it; never print or write it). The tools never print the token.

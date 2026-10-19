@@ -1,18 +1,21 @@
 ---
 name: run-session
-description: Phase 13 execution loop for one session or one tier-S ticket - Jira start, GAPS IN, code-graph refresh and blast radius, tasks test-first, three test layers, E2E or integration runs, the independent verification round against the contract (screenshot parity for UI, contract diff for APIs, answer key for data), simpler-way review, lint, evidence comment, done, then stage and ask before any commit. Use when someone runs a SESSIONS.md block, says "run session S03", or picks up a ticket to implement.
-argument-hint: "<SESSION-ID | TICKET-KEY> [--ci]"
+description: Phase 13 execution loop for one session or one tier-S ticket - Jira start, GAPS IN, code-graph refresh and blast radius, tasks test-first, three test layers, E2E or integration runs, the independent verification round against the contract (screenshot parity for UI, contract diff for APIs, answer key for data), simpler-way review, lint, evidence comment, done, then stage and ask before any commit. Use when someone runs a SESSIONS.md block, says "run session labels-domain", or picks up a ticket to implement.
+argument-hint: "<session-name | TICKET-KEY> [--ci]"
 ---
 
 # Run one session
 
 Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONVENTIONS.md` first.
-Target: `$ARGUMENTS`. Prompts: `${CLAUDE_PLUGIN_ROOT}/prompts/13-execution.md`.
+Target: `$ARGUMENTS`. Prompts: [prompt.md](prompt.md).
 
 ## 0. Load the session
 
-- A session id: find its block in `SESSIONS.md` (`### <ID> · …`). The fenced block is the prompt;
-  follow it exactly. It carries the guards, the spec range, contract ids, flows and the DoD.
+- A session name: find its block in `SESSIONS.md` (`### <step>. <name> — …`, or an old
+  `### <ID> · …`). The fenced block is the prompt; follow it exactly. It carries the guards, the
+  spec range, contract ids, flows and the DoD.
+- **Branch:** work on the wave's branch the block names (`wave/<closing key>-<wave-name>`). Never
+  create, switch to or rename a branch; if the current branch is not the wave's, stop and ask.
 - A ticket key at tier S: `python3 ${CLAUDE_PLUGIN_ROOT}/tools/jira.py show <KEY>`; the ticket's
   acceptance criteria are the spec. If it changes the contract or needs more than one session, stop
   and run `tiering`.
@@ -52,8 +55,8 @@ Target: `$ARGUMENTS`. Prompts: `${CLAUDE_PLUGIN_ROOT}/prompts/13-execution.md`.
     work remains.
 11. **Stage, then ask.** Show `git status` and the staged files, propose the subject
     `<KEY>: <summary>`, and stop. Never commit or push; the owner does (the git guard blocks it).
-    In `--ci` mode, stop after staging and print the report: the workflow commits to the ticket's
-    branch and opens a pull request, which is the owner's review.
+    In `--ci` mode, stop after staging and print the report: the workflow commits the session to the wave
+    branch and opens the wave's pull request if it has none, which is the owner's review.
 
 ## Report
 

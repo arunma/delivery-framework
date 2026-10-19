@@ -2,14 +2,17 @@
 """Generate, validate and track SESSIONS.md blocks from the session phases of tasks.md.
 
     python3 tools/sessionize.py generate specs/*/tasks.md [--template templates/SESSIONS.md]
+                                         [--wave wave-1] [--close-key ABC-9] [--first-step 1]
                                          [--set "<JIRA_KEY>=ABC" ...] [--out SESSIONS.draft.md]
     python3 tools/sessionize.py validate SESSIONS.md [--strict]
     python3 tools/sessionize.py status --sessions SESSIONS.md specs/*/tasks.md
                                        [--map docs/delivery/jira-map.json] [--jira]
 
-generate  one block per "## Phase n: Session <ID> · <summary>" in each tasks.md, built from the
-          S01 block of the SESSIONS template, filled from the phase's tasks and plan.md's
-          "Session mapping" row. Placeholders it cannot fill stay as <...> for the agent.
+generate  one block per "## Phase n — <name> · <KEY>: <summary>" in each tasks.md, built from the
+          first full implementation block of the SESSIONS template, filled from the phase's tasks
+          and plan.md's "Session mapping" row, then the wave's close block, close-<wave>. Headings
+          are "### <step>. <name> — <summary> · <KEY>"; every block names the wave's branch,
+          wave/<close key>-<wave>. Placeholders it cannot fill stay as <...> for the agent.
 validate  every session block is self-contained (guards, Jira start/done, GAPS IN, HANDOFF, the
           five Definition of done steps, the report), dependencies resolve, ids are unique, nothing
           says "see above". Leftover <placeholders> are warnings, or errors with --strict.
@@ -24,15 +27,21 @@ import pathlib
 import re
 import sys
 
-# "## Phase 1: Session S01 · summary" (template) or "## Phase 1a — S03a1 · ABC-148: summary"
-# ("Session" optional; an optional tracker key after the id is skipped).
-PHASE = re.compile(r"^##\s+Phase\s+[\w.]+\s*[:.\-—]\s*(?:Session\s+)?`?([A-Za-z][\w·\-]*\d[\w·\-]*)`?"
-                   r"(?:\s*·\s*[A-Z][A-Z0-9]+-\d+)?\s*(?:[·:\-—]\s*(.*))?$")
+# "## Phase 1: Session S01 · summary" (template), "## Phase 1a — S03a1 · ABC-148: summary", or a
+# kebab-case name id, "## Phase 3 — labels-domain · ABC-148: summary" ("Session" optional; an
+# optional tracker key, or its <JIRA_KEY>-NN placeholder, after the id is skipped). A name id must
+# be followed by " · " or ":".
+PHASE = re.compile(r"^##\s+Phase\s+[\w.]+\s*[:.\-—]\s*(?:Session\s+)?`?"
+                   r"([A-Za-z][\w·\-]*\d[\w·\-]*|[a-z][a-z0-9]*(?:-[a-z0-9]+)+(?=`?\s*[·:]))`?"
+                   r"(?:\s*·\s*(?:[A-Z][A-Z0-9]+-\d+|<[A-Z_]+>-NN))?\s*(?:[·:\-—]\s*(.*))?$")
 DEPENDS = re.compile(r"^\*\*Depends on\*\*\s*:\s*(.+)$")
 TASK = re.compile(r"^\s*-\s+\[([ xX])\]\s+(T\d+)\b(.*)$")
 FR = re.compile(r"\bFR-\d+[a-z]?\b")
 STORY = re.compile(r"\[US(\d+)\]")
 HEAD = re.compile(r"^###\s+(.+?)\s*$")
+# "### 3. labels-domain — summary · ABC-148": a step number, then the name that is the id; the
+# " · KEY" suffix is absent before tickets exist.
+NAMED = re.compile(r"^\d+\.\s+`?([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`?\s+—")
 KEY = re.compile(r"^[A-Z][A-Z0-9]+-\d+$")
 
 # What every block must carry, as (label, regex). Wave-close blocks use CLOSE_REQUIRED.
@@ -125,16 +134,22 @@ def plan_mapping(spec_dir):
     return rows
 
 
-def template_block(template):
-    """The S01 heading's fenced block from the SESSIONS template."""
-    text = pathlib.Path(template).read_text()
-    m = re.search(r"^### S01 .*?\n```\n(.*?)\n```", text, re.S | re.M)
-    if not m:
-        raise SystemExit(f"sessionize.py: no S01 block found in {template}")
-    return m.group(1)
+def template_block(template, close=False):
+    """The fenced block of the template's first full implementation session (one carrying every
+    REQUIRED item), or with close=True of its first wave-close session."""
+    for sid, _, _, body, _ in blocks(pathlib.Path(template).read_text()):
+        if sid.startswith("close-") != close:
+            continue
+        if close or all(re.search(rx, body, re.M) for _, rx in REQUIRED):
+            return body
+    raise SystemExit(f"sessionize.py: no full {'close' if close else 'implementation'} block in {template}")
 
 
-def render(ph, mapping, block, sets):
+def set_branch(block, branch):
+    return re.sub(r"Branch: \S+?(?=\.?(\s|$))", f"Branch: {branch}", block)
+
+
+def render(ph, mapping, block, sets, step, branch):
     row = mapping.get(ph["id"], {})
     frs = row.get("frs") or compress(ph["frs"]) or "<FR range>"
     stories = row.get("stories") or (", ".join(sorted(ph["stories"], key=int)) or "<stories>")
@@ -158,30 +173,39 @@ def render(ph, mapping, block, sets):
         b = b.replace("<JIRA_KEY>-NN", row["key"])
     for k, v in sets.items():
         b = b.replace(k, v)
+    b = set_branch(b, branch)
     deps = ", ".join(ph["deps"]) or "none"
-    slug = ph["spec"][4:] if re.match(r"\d{3}-", ph["spec"]) else "<slug>"
-    head = f"### {ph['id']} · `{ph['spec']}` — {ph['summary'] or '<what a person can do>'}"
-    meta = f"*Depends on: {deps}. Branch: `feat/<JIRA_KEY>-NN-{slug}`. Epic: <EPIC>.*"
-    if row.get("key"):
-        meta = meta.replace("<JIRA_KEY>-NN", row["key"])
-        head += f" · {row['key']}"
+    head = (f"### {step}. {ph['id']} — {ph['summary'] or '<what a person can do>'} (`{ph['spec']}`)"
+            f" · {row.get('key') or '<JIRA_KEY>-NN'}")
+    return finish(head, f"*Depends on: {deps}. Branch: `{branch}`. Epic: <EPIC>.*", b, sets)
+
+
+def render_close(wave, deps, block, sets, step, branch, key):
+    b = set_branch(block.replace("<JIRA_KEY>-NN", key), branch)
+    head = f"### {step}. close-{wave} — Close {wave} · {key}"
+    return finish(head, f"*Depends on: {', '.join(deps) or 'none'}. Branch: `{branch}`. Epic: <EPIC>.*", b, sets)
+
+
+def finish(head, meta, body, sets):
     for k, v in sets.items():
-        meta = meta.replace(k, v)
-    return f"{head}\n\n{meta}\n\n```\n{b}\n```\n"
+        head, meta, body = head.replace(k, v), meta.replace(k, v), body.replace(k, v)
+    return f"{head}\n\n{meta}\n\n```\n{body}\n```\n"
 
 
 def blocks(text):
-    """[(id, heading, meta, fenced body, key)] for every ### heading with a ' · ' outside fences."""
+    """[(id, heading, meta, fenced body, key)] for every session heading outside fences: an old
+    "### <ID> · summary [· KEY]" or a named "### <step>. <name> — summary [· KEY]"."""
     out, lines, fence = [], text.splitlines(), False
     for i, line in enumerate(lines):
         if line.startswith("```"):
             fence = not fence
             continue
         m = HEAD.match(line)
-        if fence or not m or " · " not in m.group(1):
+        named = NAMED.match(m.group(1)) if m else None
+        if fence or not m or (" · " not in m.group(1) and not named):
             continue
         parts = [p.strip() for p in m.group(1).split(" · ")]
-        key = parts[-1] if len(parts) > 2 and KEY.match(parts[-1]) else None
+        key = parts[-1] if (len(parts) > 2 or named) and KEY.match(parts[-1]) else None
         meta, body, j = "", None, i + 1
         while j < len(lines) and not lines[j].startswith("### ") and not lines[j].startswith("## "):
             if not meta and lines[j].strip().startswith("*") and "Depends on" in lines[j]:
@@ -193,7 +217,7 @@ def blocks(text):
                 body = "\n".join(lines[j + 1:k])
                 j = k
             j += 1
-        out.append((parts[0].strip("`"), line, meta, body or "", key))
+        out.append((named.group(1) if named else parts[0].strip("`"), line, meta, body or "", key))
     return out
 
 
@@ -276,6 +300,9 @@ def main(argv=None):
     g = sub.add_parser("generate")
     g.add_argument("tasks", nargs="+")
     g.add_argument("--template", default=str(pathlib.Path(__file__).resolve().parent.parent / "templates" / "SESSIONS.md"))
+    g.add_argument("--wave", default="wave-1", help="the wave's kebab-case name (close-<wave>, its branch)")
+    g.add_argument("--close-key", default="<JIRA_KEY>-NN", help="the close session's ticket key (names the branch)")
+    g.add_argument("--first-step", type=int, default=1, help="the step number of the first generated block")
     g.add_argument("--set", action="append", default=[], help='"<PLACEHOLDER>=value" (repeatable)')
     g.add_argument("--out")
     v = sub.add_parser("validate")
@@ -291,20 +318,23 @@ def main(argv=None):
     if a.cmd == "generate":
         sets = dict(x.split("=", 1) for x in a.set if "=" in x)
         block = template_block(a.template)
-        out, seen = [], set()
+        branch = f"wave/{a.close_key}-{a.wave}"
+        out, ids = [], []
         for f in a.tasks:
             phases = parse_tasks(f)
             if not phases:
-                print(f"sessionize.py: no 'Phase n: Session <ID>' headings in {f}", file=sys.stderr)
+                print(f"sessionize.py: no 'Phase n — <name> · <KEY>: <summary>' headings in {f}", file=sys.stderr)
             mapping = plan_mapping(pathlib.Path(f).parent)
             for ph in phases:
-                if ph["id"] in seen:
+                if ph["id"] in ids:
                     print(f"sessionize.py: duplicate session id {ph['id']} in {f}", file=sys.stderr)
                     return 1
-                seen.add(ph["id"])
-                out.append(render(ph, mapping, block, sets))
+                ids.append(ph["id"])
+                out.append(render(ph, mapping, block, sets, a.first_step + len(out), branch))
         if not out:
             return 1
+        out.append(render_close(a.wave, ids, template_block(a.template, close=True),
+                                sets, a.first_step + len(out), branch, a.close_key))
         text = "\n".join(out)
         if a.out:
             pathlib.Path(a.out).write_text(text)
@@ -327,9 +357,10 @@ def main(argv=None):
     mp = pathlib.Path(a.map)
     mapping = json.loads(mp.read_text()) if mp.is_file() else {}
     rows, drift = status(pathlib.Path(a.sessions).read_text(), a.tasks, mapping, a.jira)
-    print(f"{'Session':<12} {'Spec':<28} {'Tasks':<7} {'Key':<12} Status")
+    w = max([12] + [len(r[0]) for r in rows])
+    print(f"{'Session':<{w}} {'Spec':<28} {'Tasks':<7} {'Key':<12} Status")
     for r in rows:
-        print(f"{r[0]:<12} {r[1]:<28} {r[2]:<7} {r[3]:<12} {r[4]}")
+        print(f"{r[0]:<{w}} {r[1]:<28} {r[2]:<7} {r[3]:<12} {r[4]}")
     print("\nDrift:" if drift else "\nDrift: none")
     for d in drift:
         print(f"  - {d}")

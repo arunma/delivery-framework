@@ -23,6 +23,10 @@ from these and the atlas.
 1. Atlas approved on <date> at <commit or backup path>, <N> screens. Later changes go through the
    atlas source and are listed here.
 
+## R<n> · <Round, e.g. plans> recommendations accepted (<YYYY-MM-DD>)
+1. The owner accepted every recommendation in the round's list: <ids>. Exceptions: <id: the answer
+   instead | none>. Until an item is answered, sessions build its recommendation.
+
 ## Answers to open questions (<date>)
 
 | Question | Answer | Applied in |

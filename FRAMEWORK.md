@@ -2,7 +2,7 @@
 
 A plain reference to every step. [README.md](README.md) explains the idea and walks through two
 examples; [CHECKLIST.md](CHECKLIST.md) has a short checklist per step. The detail of how each step is
-done lives in its skill (`skills/<name>/SKILL.md`), its prompt ([prompts/](prompts/)) and its
+done lives in its skill (`skills/<name>/SKILL.md`), its prompt (`skills/<name>/prompt.md`) and its
 template ([templates/](templates/)), so it is not repeated here.
 
 Each step below says what it's for, what you run, what you get, and when it's done. Steps the
@@ -96,7 +96,8 @@ From step 4 on, every project runs the same steps.
 
 - **For:** one place where the owner's word is final, and every open question has a recommendation.
 - **Run:** `/delivery:decisions`.
-- **You get:** `docs/delivery/DECISIONS.md` (wins over every other document), `OPEN-QUESTIONS.md`,
+- **You get:** `docs/delivery/DECISIONS.md` (wins over every other document; after each planning
+  round, the agents' "needs owner" items as one short list of recommendations), `OPEN-QUESTIONS.md`,
   `GLOSSARY.md` (one concept, one name) and `DISCREPANCIES.md` (every disagreement, never resolved
   silently).
 - **Done when:** every question has a recommendation and says what it blocks, and every answer is
@@ -147,10 +148,13 @@ From step 4 on, every project runs the same steps.
 
 - **For:** a list of self-contained prompts, one per agent context, in dependency order.
 - **Run:** `/delivery:sessionize`.
-- **You get:** `SESSIONS.md`: the Definition of done, one block per session, grouped into batches
-  (waves) with a close block after each.
-- **Done when:** `sessionize.py validate SESSIONS.md --strict` passes and every requirement is in
-  some session.
+- **You get:** `SESSIONS.md`: the Definition of done, one block per session with a readable name
+  (`labels-domain`), grouped into batches (waves) with a close block after each; `RUN-SHEET.md`, the
+  commands one by one; `SESSIONS-EXPLAINED.md`, how the sessions were cut. A session too big for one
+  context is split into named parts, each its own ticket. Asked for fewer units? Keep the splits and
+  make the names readable (the skill says why).
+- **Done when:** `sessionize.py validate SESSIONS.md --strict` and `runsheet.py` pass and every
+  requirement is in some session.
 
 ## 12 · Tracker
 
@@ -163,12 +167,15 @@ From step 4 on, every project runs the same steps.
 ## 13 · Run the sessions
 
 - **For:** building one session's slice, proving it, and handing it to the owner staged.
-- **Run:** `/delivery:session <ID>` in a fresh context; `/delivery:status` to see what is next.
+- **Run:** `/delivery:session <name>` by hand in a fresh context, on the wave's branch
+  (`wave/<closing key>-<wave-name>`); `/delivery:status` to see what is next. CI-driven runs are
+  optional ([PILOT.md](PILOT.md) §9).
 - **You get:** code and tests written test-first, end-to-end runs (staging, synthetic data), an
   independent check against the contract (`design/parity/NNN.md` or `verification/NNN.md`), a report,
   and the work staged.
 - **Done when:** the report has pasted test output, every check passed or is marked NOT RUN with a
-  reason, the check file has no open rows, and the owner has committed.
+  reason, the check file has no open rows, and the owner has committed it: one commit per session,
+  its ticket key in the subject.
 
 ## 14 · Close the batch
 
@@ -176,7 +183,8 @@ From step 4 on, every project runs the same steps.
 - **Run:** `/delivery:close-wave <n>`.
 - **You get:** every check re-run, a list of what is really not done, proposed fixes for open
   discrepancies, and proposed rules for `AGENTS.md`.
-- **Done when:** every lesson is a rule, a template change, or "no rule needed", approved by the owner.
+- **Done when:** every lesson is a rule, a template change, or "no rule needed", approved by the
+  owner, and the owner has pushed the wave branch once and opened one PR for the wave.
 
 ---
 
@@ -191,7 +199,9 @@ contracts/api/  contracts/data/  contracts/surface/  contracts/infra/  contracts
 verification/NNN.md  verification/NNN/             # non-app checks and raw results
 .specify/memory/constitution.md         # spec-kit reads it from here
 .env                                    # gitignored: JIRA_SITE, JIRA_USER, JIRA_TOKEN
+docs/RESTART.md                         # the restart prompt, refreshed after every major step
 docs/delivery/
+  RUN-SHEET.md  SESSIONS-EXPLAINED.md
   DECISIONS.md  OPEN-QUESTIONS.md  GLOSSARY.md  DISCREPANCIES.md  BACKLOG.md
   BACKEND-AUDIT.md  SPEC-BRIEF.md  PLAN-BRIEF.md  SPEC-VERIFICATION.md
   JIRA.md  jira-map.json  backend-items.json

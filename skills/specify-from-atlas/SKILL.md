@@ -11,7 +11,7 @@ check the profile (phase `specs`; its `with` names the contract). Feature: `$ARG
 
 1. **Back up `specs/`** before any agent writes to it.
 2. Write `docs/delivery/SPEC-BRIEF.md` from `${CLAUDE_PLUGIN_ROOT}/templates/SPEC-BRIEF.md` once per
-   project; the spec prompts are in `${CLAUDE_PLUGIN_ROOT}/prompts/09-specs.md`.
+   project; the spec prompts are in [prompt.md](prompt.md).
 3. One spec per feature in `specs/NNN-name/spec.md` (spec-kit `/speckit.specify`, then shaped to the
    house format), with `checklists/requirements.md` including *Contract and build coverage*: every
    contract id this spec owns → its FRs. For UI, the owner spec comes from `spec_map.py`.

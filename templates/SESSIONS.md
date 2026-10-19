@@ -2,13 +2,17 @@
 
 <!-- Guidance: the build sequence. One fenced block per session; each block is pasted ALONE into a
 fresh agent session, so it must carry every guard and the whole Definition of done in short.
-Headings are parsed by tools/create_tickets.py: `### <ID> · <summary>` then, on the next line,
-`*Depends on: <ID>, <ID>. Branch: `...`. Epic: <EPIC>.*`. After tickets exist, append the key:
-`### <ID> · <summary> · <JIRA_KEY>-NN`. Text outside the fences is for the engineer. Keep IDs
-stable; never renumber. Remove these comments when filled in. -->
+Headings are parsed by tools/sessionize.py and tools/create_tickets.py:
+`### <step>. <name> — <summary> · <JIRA_KEY>-NN` (no ` · <key>` before tickets exist) then, on the next line,
+`*Depends on: <name>, <name>. Branch: `wave/...`. Epic: <EPIC>.*`. A name is kebab-case
+`<area>-<what>`; a wave's close is `close-<wave-name>`; the step is the order across the whole build.
+Text outside the fences is for the engineer. Never rename a session once it has a ticket. Remove
+these comments when filled in. -->
 
-Copy one block, paste it into a **fresh agent session opened at the repo root**, let it run to
-completion, then move to the next. A session never commits: it ends with the work staged, a report,
+Run one block at a time in a **fresh agent session opened at the repo root**, on the wave's branch
+(`/delivery:session <name>`, or paste the block), let it run to completion, then move to the next.
+The exact commands are in `docs/delivery/RUN-SHEET.md`; how the sessions were cut is in
+`docs/delivery/SESSIONS-EXPLAINED.md`. A session never commits: it ends with the work staged, a report,
 and a question to the owner. Long sessions lose the thread, so every block also says how to stop
 cleanly and hand over.
 
@@ -29,17 +33,22 @@ everything else. The old UI stays the default behind `<flag>` until the closing 
 branch ships at every step.
 
 Large specs span several sessions (one context window each). A part-1 session plans the whole spec
-and implements its range; later parts continue from `HANDOFF.md` without re-planning. Engine
+and implements its range; later parts continue from `HANDOFF.md` without re-planning. Each part is
+its own story and closes itself: the Definition of done over its own diff, its own ticket to Done,
+without waiting for the next part. Engine
 sessions ship no screen; their E2E flows are written by the session that first gives them one, and
 the block names it.
 
-| Wave | Sessions | Specs |
-| --- | --- | --- |
-| Foundation | F1, …, then F·Close | `000`, `001`, … |
-| 1 — <theme> | S01, S02, then W1·Close | `00N`, … |
-| Close | C1 | removes `<flag>` |
+| Wave | Sessions | Specs | Branch |
+| --- | --- | --- | --- |
+| Foundation | foundation-flag, …, then close-foundation | `000`, `001`, … | `wave/<JIRA_KEY>-NN-foundation` |
+| 1 — <theme> | widgets-domain, widgets-screens, then close-wave-1 | `00N`, … | `wave/<JIRA_KEY>-NN-wave-1` |
+| Close | remove-flag | removes `<flag>` | `wave/<JIRA_KEY>-NN-remove-flag` |
 
-Within a wave, run the sessions in the order listed: each names what it depends on.
+Within a wave, run the sessions in the order listed: each names what it depends on. **One branch per
+wave**, named after the ticket of the session that closes it. Every session of the wave works on it
+and ends staged; the owner commits each one (one commit per session, its key in the subject) and,
+after the close session passes, pushes the branch once and opens one PR for the wave.
 
 ---
 
@@ -140,10 +149,10 @@ Parity file format (`design/parity/NNN.md`):
 These are the owner's, not a session's. Each names the session it blocks.
 
 **O1 — Staging test data.** A seeded synthetic account (`design/seed.md`); a second synthetic account
-for flows that change data; <other fixtures>. **Blocks F1.**
+for flows that change data; <other fixtures>. **Blocks foundation-flag.**
 
 **O2 — Jira.** Tickets created with `tools/create_tickets.py` (index: `docs/delivery/JIRA.md`). Keep
-`JIRA_SITE`, `JIRA_USER` and `JIRA_TOKEN` in `.env`. **Blocks F1.**
+`JIRA_SITE`, `JIRA_USER` and `JIRA_TOKEN` in `.env`. **Blocks foundation-flag.**
 
 **O3 — Decisions still open** (`docs/delivery/OPEN-QUESTIONS.md`). A session that reaches one builds
 the recommendation and says so.
@@ -154,10 +163,10 @@ the recommendation and says so.
 
 **O4 — Devices.** <Physical devices for the performance budgets; SDKs on the build machine.>
 
-**O5 — Triage `docs/delivery/DISCREPANCIES.md` before F1.**
+**O5 — Triage `docs/delivery/DISCREPANCIES.md` before foundation-flag.**
 
-**O6 — Commits.** Every session ends staged. The owner commits and merges, after reading the
-report.
+**O6 — Commits.** Every session ends staged. The owner commits it on the wave branch after reading
+the report, and pushes and merges once per wave.
 
 ---
 
@@ -167,25 +176,25 @@ These are the ground every screen stands on, and **skipping them is the main way
 screen built before the data layer is retro-fitted into it, and a screen built before the parity
 tooling has no way to prove it matches the atlas.
 
-### F1 · `000-foundation` (part 1) — The flag, identifiers, the E2E wrapper, goldens and parity tooling
+### 1. foundation-flag — The flag, identifiers, the E2E wrapper, goldens and parity tooling (`000-foundation`) · <JIRA_KEY>-NN
 
-*Depends on: none. Branch: `chore/<JIRA_KEY>-NN-foundation`. Epic: <EPIC>.*
+*Depends on: none. Branch: `wave/<JIRA_KEY>-NN-foundation`. Epic: <EPIC>.*
 
 <!-- Guidance: F-sessions build what every DoD step uses: the feature flag, the accessibility
 identifier convention, the E2E wrapper and capture build, the shot helper, the golden matrix,
-<atlas-compare> and <parity-check>, the coverage gate. Same block shape as S01 below. -->
+<atlas-compare> and <parity-check>, the coverage gate. Same block shape as widgets-domain below. -->
 
 ```
-<Same block shape as S01 below, with Spec and range 000 FR-001–FR-0xx.>
+<Same block shape as widgets-domain below, with Spec and range 000 FR-001–FR-0xx.>
 ```
 
 ---
 
 ## Wave 1 — <theme>
 
-### S01 · `00N-<name>` (part 1) — <What a person can do when this session is done>
+### 2. widgets-domain — <What a person can do when this session is done> (`00N-<name>`, part 1) · <JIRA_KEY>-NN
 
-*Depends on: F1. Branch: `feat/<JIRA_KEY>-NN-<slug>`. Epic: <EPIC>.*
+*Depends on: foundation-flag. Branch: `wave/<JIRA_KEY>-NN-wave-1`. Epic: <EPIC>.*
 
 <One or two lines for the engineer: what this session is for, anything to set up first.>
 
@@ -199,7 +208,7 @@ Jira key: <JIRA_KEY>-NN. First command: python3 tools/jira.py start <JIRA_KEY>-N
 Progress). At the end: python3 tools/jira.py done <JIRA_KEY>-NN "<evidence>" only when the Definition
 of done holds; otherwise python3 tools/jira.py comment <JIRA_KEY>-NN "<what is left>" and leave it
 In Progress.
-Branch: feat/<JIRA_KEY>-NN-<slug>
+Branch: wave/<JIRA_KEY>-NN-wave-1 (the wave's branch; do not create another)
 Put the key in code comments that need one and in the commit subject you propose.
 
 Guards, every one of them:
@@ -292,19 +301,19 @@ Report at the end:
   7. The staged files and the commit subject you propose ("<JIRA_KEY>-NN: …"). Then ask.
 ```
 
-### S02 · `00N-<name>` (part 2) — <What a person can do when this session is done>
+### 3. widgets-screens — <What a person can do when this session is done> (`00N-<name>`, part 2) · <JIRA_KEY>-NN
 
-*Depends on: S01. Branch: `feat/<JIRA_KEY>-NN-<slug>`. Epic: <EPIC>.*
+*Depends on: widgets-domain. Branch: `wave/<JIRA_KEY>-NN-wave-1`. Epic: <EPIC>.*
 
 ```
-<Shortened in this template. A real block repeats S01's guard text, GAPS IN, context discipline
+<Shortened in this template. A real block repeats widgets-domain's guard text, GAPS IN, context discipline
 and the Definition of done in full, then names its own range, screens, read-first list, watch-fors
 and flows. It starts from specs/00N-<name>/HANDOFF.md and does not re-plan.>
 ```
 
-### W1·Close · Close Wave 1
+### 4. close-wave-1 — Close Wave 1 · <JIRA_KEY>-NN
 
-*Depends on: S01, S02. Branch: `chore/<JIRA_KEY>-NN-close-wave-1`. Epic: <EPIC>.*
+*Depends on: widgets-domain, widgets-screens. Branch: `wave/<JIRA_KEY>-NN-wave-1`. Epic: <EPIC>.*
 
 Implements no spec.
 
@@ -313,7 +322,8 @@ Before you start: read CLAUDE.md, .specify/memory/constitution.md (v<X.Y.Z>) and
 docs/delivery/DECISIONS.md in full. Principles <I, II, IV, VI and XIII> are non-negotiable.
 
 Jira key: <JIRA_KEY>-NN (python3 tools/jira.py start <JIRA_KEY>-NN first; done <JIRA_KEY>-NN
-"<evidence>" last). Branch: chore/<JIRA_KEY>-NN-close-wave-1.
+"<evidence>" last). Branch: wave/<JIRA_KEY>-NN-wave-1. After this session is committed,
+the owner pushes the branch and opens one PR for the wave.
 
 Guards: <STAGING> only, synthetic accounts only; no personal data, credentials, tokens or codes in
 logs, reports or screenshots; no commit and no push — stage and ask; when documents disagree, STOP
@@ -377,4 +387,4 @@ If a session reports a feature done and cannot produce (1), (3) and (4), it has 
 
 ## Review prompt (optional, after any session, in another fresh session)
 
-See `prompts/13-execution.md` § Session reviewer in the delivery framework.
+See `skills/run-session/prompt.md` § Session reviewer in the delivery framework.

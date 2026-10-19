@@ -59,12 +59,18 @@ Every number links to a ticket, a PR or a file.
    `/delivery:specify-from-atlas`, `/delivery:verify-specs`, `/delivery:plan-and-tasks`. The owner
    approves each.
 4. `/delivery:jira-sync` as a dry run. Record baseline numbers from comparable past work.
+5. Create the wave branch, `wave/<closing key>-<wave-name>`, from an up-to-date main. Every pilot
+   session works on it. `RUN-SHEET.md` has the commands.
 
 **Weeks 1 and 2, run sessions.**
-1. At most one session a day, each in a fresh Claude Code session: `/delivery:session <ID>`.
+1. At most one session a day, each started by hand in a fresh Claude Code session:
+   `/delivery:session <name>`.
 2. Check the report against [CHECKLIST.md](CHECKLIST.md) §13 first. Missing evidence: send it back
    and count it as rework.
-3. The owner reviews `git diff --staged`, commits and opens the PR; the reviewer reviews it.
+3. The owner reviews `git diff --staged` and commits it on the wave branch (one commit per session,
+   its key in the subject). After the wave's close session, the owner pushes the branch once and
+   opens one PR for the wave; the reviewer reviews it. A wave that does not reach its close stays
+   unpushed.
 4. Log the session the same day.
 
 **Week 3, decide.**
@@ -97,8 +103,12 @@ later use.
 | Different screens show different facts | Each part invented its own sample data | One facts block in the kit |
 | A session block fails when run on its own | It said "see above" | Every block repeats its guards in full |
 | "Done" with nothing pasted | The session summarised instead of proving | Reject it, send it back, count it as rework |
-| The session ran out of context | The slice was too big | Stop at a task boundary, write `HANDOFF.md`, split it next time |
+| The session ran out of context | The slice was too big | Stop at a task boundary, write `HANDOFF.md`; split it into named parts (sessionize skill) |
 | The agent commits after "looks good" | Approval of the work was read as approval to commit | The git guard blocks it; the owner approves each commit |
+| The agent pushed as well as committed | `.delivery/APPROVED` allows any commit and push for its whole window | Delete it right after the one commit |
+| The planning documents cannot be committed, with no error | `docs/` or another planning folder is in `.gitignore` | `git check-ignore -v` on each folder before the first commit; re-include it |
+| `/delivery:status` shows no progress for any session | The status tool did not read the project's phase headings | Use the `tasks.md` template's heading; report any other format as a framework bug |
+| A token stops working after a key was appended to `.env` | `.env` had no trailing newline, so two lines merged | Check `tail -c1 .env` before appending |
 | Pipeline tests pass on a changed answer key | The key was regenerated to make a test pass | The answer key changes only with the contract |
 
 ## 8. Go or no-go
@@ -119,10 +129,10 @@ ordinary docs.
 
 ## 9. Optional: sessions from CI
 
-Once interactive sessions work, you can let tickets drive them.
-[ci/github-actions/](ci/github-actions/) has an **example** workflow: an issue labelled
-`delivery:ready` runs `/delivery:session <ID> --ci` headless on its own branch and opens a draft PR.
-Read its README, adapt it, and run it once by hand (`workflow_dispatch`) on the smallest session
-first. It needs the Claude GitHub App, an `ANTHROPIC_API_KEY` secret and branch protection. App
+Once interactive sessions work, you can run them from CI.
+[ci/github-actions/](ci/github-actions/) has an **example** workflow: run by hand with a session name
+and the wave branch, it runs `/delivery:session <name> --ci` headless on that branch, commits the
+session there and opens the wave's draft PR if it has none. It never creates a branch. Read its
+README, adapt it, and run it on the smallest session first. It needs the Claude GitHub App, an `ANTHROPIC_API_KEY` secret and branch protection. App
 end-to-end flows can't run on a Linux runner; they show NOT RUN and need a local run before the PR is
 ready. Never point it at production. To roll back, remove the workflow file and its secrets.

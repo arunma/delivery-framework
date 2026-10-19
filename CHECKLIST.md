@@ -23,6 +23,8 @@ Project: `<PROJECT>` · Size: ☐ small ☐ medium ☐ large · ☐ existing ☐
 - [ ] `CLAUDE.md` §0 lists every trap found, each with symptom, cause and fix
 - [ ] `AGENTS.md` has the owner's rules and a *Project Learnings* list
 - [ ] Tracker project exists; `.env` holds its credentials and `git check-ignore .env` prints `.env`
+- [ ] `.env` ends with a newline before anything is appended to it (`tail -c1 .env | xxd`)
+- [ ] `git check-ignore -v docs/delivery specs design` prints nothing, so the plan can be committed
 
 ## 2 · Capture today
 - [ ] Staging and synthetic data only; no real person's data anywhere
@@ -70,6 +72,8 @@ Project: `<PROJECT>` · Size: ☐ small ☐ medium ☐ large · ☐ existing ☐
 
 ## 11 · Sessions
 - [ ] `sessionize.py validate SESSIONS.md --strict` passes
+- [ ] Every session has a readable `<area>-<what>` name and fits one context; split ones are named parts
+- [ ] `RUN-SHEET.md` passes `runsheet.py`; `SESSIONS-EXPLAINED.md` lists every session
 - [ ] Every requirement falls in some session; a close block after every wave
 - [ ] Owner tasks listed, each naming the session it blocks
 
@@ -83,11 +87,13 @@ Project: `<PROJECT>` · Size: ☐ small ☐ medium ☐ large · ☐ existing ☐
 - [ ] Every end-to-end run passed or is marked **NOT RUN** with a reason
 - [ ] Check file (`design/parity/NNN.md` or `verification/NNN.md`) by a fresh reviewer, no open rows
 - [ ] Simpler-way review done; lint clean, output pasted
-- [ ] Work staged and a commit message proposed. **The owner commits**
+- [ ] Work staged on the wave branch and a commit message proposed. **The owner commits**: one
+  commit per session, its key in the subject
 
 ## 13 · Each wave close
 - [ ] Every check so far re-run; regressions traced to a session
 - [ ] Real not-done list written; proposed fixes waiting on the owner
+- [ ] The owner pushed the wave branch once and opened one PR; any `.delivery/APPROVED` is deleted
 
 ## 14 · Learning
 - [ ] Every mistake this wave is a rule, a template change, or "no rule needed"

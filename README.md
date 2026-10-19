@@ -92,21 +92,22 @@ It writes `.delivery/profile.json`, a readable `.delivery/PROFILE.md`, and `.del
 Then run the first session in a fresh Claude Code session:
 
 ```
-/delivery:session F1
+/delivery:session signin-screen
 ```
 
 It writes failing tests, makes them pass, runs the end-to-end flows, has an independent reviewer
 compare screenshots with the mockups, stages the work and stops. Its report ends like this (example):
 
 ```
-F1 · Sign-in screen · PROJ-12
+signin-screen · Rebuild the sign-in screen · PROJ-12
 Tests: unit 42 passed · widget 18 passed · E2E 3 passed, 1 NOT RUN (no device)
 Check: design/parity/003.md, 0 open differences
 Staged: 9 files · proposed commit "PROJ-12: rebuild the sign-in screen"
 ```
 
-You review and commit it yourself. (Or run `touch .delivery/APPROVED`: the agent may then commit
-and push for the next 15 minutes. Delete the file as soon as it has.)
+You review and commit it yourself: one commit per session on the batch's branch, pushed once when
+the batch closes (`RUN-SHEET.md` lists every command). Or run `touch .delivery/APPROVED`: the agent
+may then commit and push for the next 15 minutes. Delete the file as soon as it has.
 
 ```bash
 git diff --staged
@@ -147,7 +148,6 @@ The answer key only changes when the contract changes, never to make a test pass
 | [FRAMEWORK.md](FRAMEWORK.md) | Each step: what it's for, what you run, what you get, when it's done |
 | [CHECKLIST.md](CHECKLIST.md) | A short checklist per step |
 | [PILOT.md](PILOT.md) | How a team tries the plugin for three weeks and decides |
-| [docs/learning/claude-code-plugins.md](docs/learning/claude-code-plugins.md) | How Claude Code plugins work, using this one as the example |
 | [examples/](examples/) | An anonymised case study |
 | [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md) | How to change the framework (and check it); history |
 

@@ -27,8 +27,8 @@ existing symbol the plan changes, list `graphify affected "<symbol>"` in the pla
 or the language server (call edges can be incomplete, e.g. widget construction in Dart).
 
 ## plan.md
-- Header: branch per session (`feat/<JIRA_KEY>-NN-slug`), date, spec link, Input (FR and story
-  counts).
+- Header: the wave branch (`wave/<closing key>-<wave-name>`; one branch per wave, one commit per
+  session by the owner), date, spec link, Input (FR and story counts).
 - **Summary grounded in code**: what exists today, at `path:line`; what changes; which other specs'
   providers or modules this composes.
 - Technical context.

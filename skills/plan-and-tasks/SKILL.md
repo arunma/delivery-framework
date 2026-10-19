@@ -12,7 +12,7 @@ check the profile (phase `plans`). Arguments: `$ARGUMENTS` (default: every spec 
 ## Plan (in parallel)
 
 1. Write `docs/delivery/PLAN-BRIEF.md` from `${CLAUDE_PLUGIN_ROOT}/templates/PLAN-BRIEF.md` once, and
-   back up `specs/`. Prompts: `${CLAUDE_PLUGIN_ROOT}/prompts/10-plans-and-tasks.md`.
+   back up `specs/`. Prompts: [prompt.md](prompt.md).
 2. Launch one `plan-writer` agent per spec **in a single message** so they run in parallel. Give each
    the spec folder, the session ids that build it and their order, and the brief.
 3. **Parallel-safety rules**, repeated to every agent: write only inside `specs/NNN-name/` (plan.md,

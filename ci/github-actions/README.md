@@ -1,4 +1,4 @@
-# CI pilot: tickets to pull requests (example)
+# CI pilot: sessions on the wave branch (example)
 
 **This is an example for the pilot, not a tested workflow for your repository.** Copy
 [delivery-session.yml](delivery-session.yml) into the project's `.github/workflows/`, read it, and
@@ -6,17 +6,23 @@ adapt it. Run it first with `workflow_dispatch` on one low-risk session.
 
 ## What happens
 
-1. An issue whose title is `<SESSION-ID> · <summary> · <TICKET-KEY>` gets the label
-   `delivery:ready`, or someone runs the workflow by hand with a session id and a ticket key.
-2. The job validates both ids against strict patterns (issue text never reaches a shell command
-   unquoted), creates the branch `feat/<TICKET-KEY>-session-<id>`, and runs
+The model is one branch per wave, one commit per session and one push and pull request per wave.
+The workflow fits into it; it never creates a branch.
+
+1. The owner creates the wave branch, `wave/<closing key>-<wave-name>`, and pushes it. Then someone
+   runs the workflow by hand with a session name, its ticket key and that wave branch.
+2. The job validates all three against strict patterns (inputs never reach a shell command
+   unquoted), checks out the wave branch, and runs
    [`anthropics/claude-code-action@v1`](https://github.com/anthropics/claude-code-action) in automation
-   mode with the plugin installed from this marketplace and the prompt `/delivery:session <ID> --ci`.
+   mode with the plugin installed from this marketplace and the prompt `/delivery:session <name> --ci`.
 3. The session runs the execution loop and ends with its work **staged**. The plugin's git guard
    blocks Claude from committing or pushing.
-4. A plain shell step commits the staged files to the session branch and opens a **draft** pull
-   request. The pull request is the owner's review: evidence, verification file, diff. Nothing merges
-   automatically.
+4. A plain shell step commits the staged files as the session's one commit on the wave branch,
+   pushes the branch, and opens the wave's **draft** pull request if it has none yet (later sessions
+   add commits to the same pull request). The pull request is the owner's review: evidence,
+   verification files, diff. It is marked ready after the wave's close. Nothing merges automatically.
+5. Run the sessions of a wave one at a time, in the run sheet's order; `concurrency` queues a second
+   run on the same wave branch.
 
 ## Secrets (placeholders; set them in the repository's Actions secrets)
 
@@ -31,9 +37,8 @@ The Claude GitHub App must be installed on the repository for the action's defau
 
 ## Permissions
 
-The job asks for `contents: write` (push the session branch), `pull-requests: write` (open the
-draft), `issues: write` (the action may comment on the triggering issue) and `id-token: write` (the
-action's authentication). Nothing else. Protect the default branch so a person must approve every
+The job asks for `contents: write` (push the wave branch), `pull-requests: write` (open the
+wave's draft) and `id-token: write` (the action's authentication). Nothing else. Protect the default branch so a person must approve every
 merge.
 
 ## Limits to know before the pilot
@@ -44,6 +49,6 @@ merge.
 - **Pull requests opened with the default `GITHUB_TOKEN` do not trigger other workflows.** Use a
   GitHub App token or run the project's CI by hand on the branch.
 - **Cost:** `--max-turns` and `timeout-minutes` cap a run; `concurrency` stops two runs on the same
-  issue at once.
+  wave branch at once.
 - **Never on a production configuration**: no production URLs, flavors or credentials in the
   runner. Set `prod_guard` patterns in `.delivery/guards.json` so a slip is stopped.

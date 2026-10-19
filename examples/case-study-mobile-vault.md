@@ -70,9 +70,29 @@ left out; what follows is the shape of the work, its counts and its lessons.
    counts and names. The same document expired on different days on different screens. The seed's
    folder names also collided with the new grouping names. → One facts block in `kit.py`, which
    every screen reads (the fix-round brief, item 1), and a seed ↔ atlas mapping in `seed.md`.
+8. **Sessions too big for one context.** Measured before the first run, 13 of the 54 sessions would
+   not fit one context, so the build became 67. Each was split at a seam into two parts, each its
+   own story. At first the second part also closed the first part's ticket; now each part closes
+   itself. One split left a part's screens incomplete
+   for its own check, so the story that drew them moved into that part. → Sizing and named parts in
+   the `sessionize` skill.
+9. **Session codes nobody could read.** Ids such as a letter, a spec number and a part suffix meant
+   nothing to engineers or the tracker's readers. → Readable `<area>-<what>` names with a step
+   number for order, an old → new table when renaming, `RUN-SHEET.md` and `SESSIONS-EXPLAINED.md`.
+10. **When to push.** Each session first had its own branch, so a wave meant many small PRs to
+    merge in order. → One branch per wave, one commit per session by the owner, one push and one PR after
+    the wave's close.
+11. **Planning traps.** `docs/` was in `.gitignore`, so the planning documents could not be
+    committed and nothing said so. The approval file allowed a push as well as the one commit it was
+    made for. The status tool did not read the project's phase headings and showed no progress.
+    `.env` had no trailing newline, so appending a key corrupted the token before it. → `CHECKLIST.md`
+    §1 and the known problems in `PILOT.md` §7.
 
 Also learned:
 - A verification pass before planning raised screen coverage from 194 to 235 of 235.
 - An agent "approved to push a branch" is not approved to commit. That is now an explicit rule.
+- After each planning round, the agents' "needs owner" items went to the owner as one short list of
+  recommendations, and "accept all" was recorded as one dated decisions section (`decisions` skill,
+  *round*). A long planning session was resumed from a restart prompt (`RESTART-PROMPT.md`).
 - Jira's issueLink payload is inverted: the blocker goes in `inwardIssue`. The first run got all
   117 "Blocks" links backwards; check one pair in the UI after creating links.

@@ -10,7 +10,7 @@ evidence before claims, one concept with one name, and nothing resolved silently
    propose. A lesson from a real project is the best reason for a change; describe it without naming
    the project, its people or its code.
 2. **Change every place the rule lives.** A rule usually appears in more than one file: the guide
-   (`FRAMEWORK.md`), the gate (`CHECKLIST.md`), the prompt (`prompts/`), the template (`templates/`)
+   (`FRAMEWORK.md`), the gate (`CHECKLIST.md`), the prompt (`skills/<name>/prompt.md`), the template (`templates/`)
    and sometimes a tool (`tools/`). A pull request that changes one and leaves the others
    contradicting it will be asked to finish the job, or to record the gap.
 3. **Keep the vocabulary.** Use the existing names (atlas, screen id, session, wave, parity round,

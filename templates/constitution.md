@@ -154,6 +154,10 @@ this initiative, flags that hide unfinished work. -->
   of done holds. A session that stops short leaves it *In Progress* with a comment saying what is
   left. Discrepancies and new work found mid-session become their own linked tickets. Comments
   never contain credentials or personal data.
+- **One branch per wave**, `wave/<closing key>-<wave-name>` (the key of the wave's close session).
+  Every session of the wave works on it and ends staged; the owner commits each session (one commit,
+  its key in the subject) and, after the close session passes, pushes the branch once and opens one
+  pull request for the wave. Sessions run by hand; CI-driven runs are optional.
 - **Every implementation session closes in this order**: three test layers green → E2E flows
   green on staging → captures or outputs by contract id → independent verification against the
   contract (the gate the profile names) → differences fixed or recorded → closing review.

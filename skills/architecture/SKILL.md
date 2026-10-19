@@ -8,7 +8,7 @@ description: Phase 8 - write ARCHITECTURE.md from the code graph (graphify) with
 Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Read `${CLAUDE_PLUGIN_ROOT}/reference/CONVENTIONS.md` first and
 check the profile (phase `architecture`).
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/prompts/08-architecture.md` and
+1. Read [prompt.md](prompt.md) and
    `${CLAUDE_PLUGIN_ROOT}/templates/ARCHITECTURE.md`.
 2. Graph first: `graphify update .` if stale; `graphify-out/GRAPH_REPORT.md` for the module map,
    dependencies and hot spots; `graphify path`, `explain` and `affected` to trace each flow; confirm

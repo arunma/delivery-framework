@@ -74,8 +74,9 @@ From `.specify/memory/constitution.md` v<X.Y.Z>. Read it; it is short.
 
 Work is tracked in Jira, project **<JIRA_KEY>** at <JIRA_SITE>. Every feature has an epic; this
 initiative's tickets carry the label `<INITIATIVE>`. Reference the Jira key — never an ad-hoc scheme
-— in branch names (`feat/<JIRA_KEY>-14-short-slug`), commit subjects (`<JIRA_KEY>-14: page the
-list`) and code comments. A session moves its own ticket with `python3 tools/jira.py`.
+— in wave branch names (`wave/<JIRA_KEY>-20-wave-1`: one branch per wave, named by the key of its
+close session), commit subjects (`<JIRA_KEY>-14: page the list`: one commit per session, made by the
+owner) and code comments. One push and one PR per wave, after its close. A session moves its own ticket with `python3 tools/jira.py`.
 
 Scratch TODOs that are not worth a ticket go in <scratch tracker, e.g. bd>. Never leave markdown TODO
 lists in the repo.

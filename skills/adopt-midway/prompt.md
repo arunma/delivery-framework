@@ -41,7 +41,7 @@ done, write TRACEABILITY.md, audit the backend) or greenfield.
 1. Backup path.
 2. The phase map table.
 3. Files created (Step 3), and discrepancies raised (ids).
-4. The proposed order for closing the gaps, with the first three prompts to run (from prompts/).
+4. The proposed order for closing the gaps, with the first three skills to run.
 5. Questions for the owner.
 Commit nothing, and ask.
 ```
