@@ -63,8 +63,9 @@ Every number links to a ticket, a PR or a file.
    session works on it. `RUN-SHEET.md` has the commands.
 
 **Weeks 1 and 2, run sessions.**
-1. At most one session a day, each started by hand in a fresh Claude Code session:
-   `/delivery:session <name>`.
+1. At most one session a day, each in a fresh context: `/delivery:wave <wave>` runs the wave's
+   sessions one child agent at a time and stops after each for the commit; `/delivery:session <name>`
+   runs one by hand.
 2. Check the report against [CHECKLIST.md](CHECKLIST.md) §13 first. Missing evidence: send it back
    and count it as rework.
 3. The owner reviews `git diff --staged` and commits it on the wave branch (one commit per session,
@@ -81,7 +82,8 @@ Every number links to a ticket, a PR or a file.
 ## 6. Every day
 
 1. `/delivery:status`: what is next, what drifted.
-2. Pick the next session whose dependencies are done; run it in a fresh session.
+2. Run `/delivery:wave <wave>`: it picks up at the next undone session (or `/delivery:session <name>`
+   in a fresh session).
 3. Answer what it asks; don't let it decide product questions.
 4. Read the report, check the evidence; the owner commits or sends it back.
 5. Log it: ten minutes at the end of the day.

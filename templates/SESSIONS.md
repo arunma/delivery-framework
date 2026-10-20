@@ -4,13 +4,15 @@
 fresh agent session, so it must carry every guard and the whole Definition of done in short.
 Headings are parsed by tools/sessionize.py and tools/create_tickets.py:
 `### <step>. <name> — <summary> · <JIRA_KEY>-NN` (no ` · <key>` before tickets exist) then, on the next line,
-`*Depends on: <name>, <name>. Branch: `wave/...`. Epic: <EPIC>.*`. A name is kebab-case
+`*Depends on: <name>, <name>. Branch: `wave/...`. Epic: <EPIC>.*` (add `Parallel with: <name>.`
+when two sessions may run at once: different specs, no shared files). A name is kebab-case
 `<area>-<what>`; a wave's close is `close-<wave-name>`; the step is the order across the whole build.
 Text outside the fences is for the engineer. Never rename a session once it has a ticket. Remove
 these comments when filled in. -->
 
-Run one block at a time in a **fresh agent session opened at the repo root**, on the wave's branch
-(`/delivery:session <name>`, or paste the block), let it run to completion, then move to the next.
+Run one block at a time in **one fresh child agent (or session) per session**, at the repo root, on
+the wave's branch: `/delivery:wave <wave>` spawns one per session in order and stops after each for
+the commit; `/delivery:session <name>` (or pasting the block) runs one by hand.
 The exact commands are in `docs/delivery/RUN-SHEET.md`; how the sessions were cut is in
 `docs/delivery/SESSIONS-EXPLAINED.md`. A session never commits: it ends with the work staged, a report,
 and a question to the owner. Long sessions lose the thread, so every block also says how to stop

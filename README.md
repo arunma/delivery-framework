@@ -46,10 +46,25 @@ contract, specs, plans and sessions in batches.
 | --- | --- |
 | `/delivery:start` | Look at the project, ask what it can't tell, and say what to run next |
 | `/delivery:assess` | Just the look: what you're building, existing or new, size, risks |
+| `/delivery:wave <wave>` | Run a whole wave: one fresh child agent per session, its questions brought to you, a stop after each for your commit |
 | `/delivery:session <id>` | Run one session (or one small ticket): tests first, build, check, stage the work for you |
 | `/delivery:parity <spec>` | Check the result matches the contract: screenshots for apps, contract tests for APIs, expected outputs for data |
 | `/delivery:status` | Show what is done, what is next, and where the tracker disagrees with the work |
 | `/delivery:close-wave <n>` | Close a batch ("wave") of sessions: re-run every check, list what is really not done, turn mistakes into rules |
+
+`/delivery:wave` keeps one conversation per wave. Each session runs in a fresh subagent; subagents
+can't ask you anything, so a child stops with its questions and the parent asks you:
+
+```mermaid
+flowchart LR
+  P["Parent: /delivery:wave 1"] --> C["Child: one session"]
+  C -->|"NEEDS USER"| Q["You answer"]
+  Q --> C
+  C -->|"staged + report"| K["You commit: ! git commit"]
+  K -->|"next session"| P
+  K -->|"last one"| Z["Close the wave"]
+  Z --> U["Push and PR printed for you"]
+```
 
 Every step also has its own command, such as `/delivery:contract` or `/delivery:sessionize`; see
 [FRAMEWORK.md](FRAMEWORK.md). Guard hooks stop the agent committing, pushing or touching your
@@ -90,13 +105,13 @@ It writes `.delivery/profile.json`, a readable `.delivery/PROFILE.md`, and `.del
 /delivery:jira-sync              # one ticket per session
 ```
 
-Then run the first session in a fresh Claude Code session:
+Then run the first wave (`/delivery:wave 1`), or one session in a fresh Claude Code session:
 
 ```
 /delivery:session signin-screen
 ```
 
-It writes failing tests, makes them pass, runs the end-to-end flows, has an independent reviewer
+A session writes failing tests, makes them pass, runs the end-to-end flows, has an independent reviewer
 compare screenshots with the mockups, stages the work and stops. Its report ends like this (example):
 
 ```

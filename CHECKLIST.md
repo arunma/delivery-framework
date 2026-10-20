@@ -82,6 +82,7 @@ Project: `<PROJECT>` · Size: ☐ small ☐ medium ☐ large · ☐ existing ☐
 - [ ] `jira-map.json` committed; keys written into `SESSIONS.md` and specs
 
 ## 13 · Each session
+Per wave: `/delivery:wave <wave>`; per session (advanced): `/delivery:session <name>`.
 - [ ] Ticket started; the first output lists the open gaps that touch this session
 - [ ] Tests written first and seen failing; all three test layers green, output pasted
 - [ ] Every end-to-end run passed or is marked **NOT RUN** with a reason

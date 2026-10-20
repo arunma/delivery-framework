@@ -38,7 +38,8 @@ check the profile (phase `sessions`). Mode: `$ARGUMENTS` (default: generate, the
    "not built in this build" with its reason.
 
 7. **Run sheet**: `docs/delivery/RUN-SHEET.md` from `${CLAUDE_PLUGIN_ROOT}/templates/RUN-SHEET.md`,
-   one `#### <step>. <name> — <summary> · <KEY>` heading per session with its commands, wave by wave. Check it:
+   the short form: each wave's one `/delivery:wave <wave>` command, then one
+   `#### <step>. <name> — <summary> · <KEY>` heading per session with its *After* line. Check it:
    `python3 ${CLAUDE_PLUGIN_ROOT}/tools/runsheet.py docs/delivery/RUN-SHEET.md --sessions SESSIONS.md`
    (every session exactly once, each after what it depends on).
 8. **Explainer**: `docs/delivery/SESSIONS-EXPLAINED.md` from

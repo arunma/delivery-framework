@@ -5,8 +5,8 @@ did not plan the build: engineers, a PM, a reviewer. Sections 1 and 2 change lit
 the table in section 4 whenever SESSIONS.md changes. Fill the counts from the files, never from
 memory. Remove these comments when filled in. -->
 
-A **session** is one slice of work that one engineer runs in one fresh Claude Code session
-(`/delivery:session <name>`). It is small enough to finish inside one context window, and it ends
+A **session** is one slice of work that runs in one fresh child agent (or session):
+`/delivery:wave <wave>` runs a wave's sessions one at a time, `/delivery:session <name>` runs one. It is small enough to finish inside one context window, and it ends
 with its work staged, tested, checked against the contract and its ticket closed. This build has
 <N> sessions. The prompts are in `SESSIONS.md`; the commands to run them are in `RUN-SHEET.md`.
 

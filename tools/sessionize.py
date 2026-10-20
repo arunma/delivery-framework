@@ -7,6 +7,7 @@
     python3 tools/sessionize.py validate SESSIONS.md [--strict]
     python3 tools/sessionize.py status --sessions SESSIONS.md specs/*/tasks.md
                                        [--map docs/delivery/jira-map.json] [--jira]
+    python3 tools/sessionize.py wave <wave> [--sessions SESSIONS.md] [--tasks specs/*/tasks.md]
 
 generate  one block per "## Phase n — <name> · <KEY>: <summary>" in each tasks.md, built from the
           first full implementation block of the SESSIONS template, filled from the phase's tasks
@@ -18,6 +19,11 @@ validate  every session block is self-contained (guards, Jira start/done, GAPS I
           says "see above". Leftover <placeholders> are warnings, or errors with --strict.
 status    per session: tasks done/total from tasks.md, the ticket key, and with --jira the ticket's
           status; reports drift between them. Without --jira it needs no credentials.
+wave      one wave as JSON: its title, branch, sessions in dependency order (step, name, key,
+          depends_on, after (dependencies outside the wave), parallel_with, close) and, with
+          --tasks, each session's ticked/total tasks. <wave> is a number (0 = the first
+          section, N = "Wave N"), a word from a section title ("close", "model"), the wave branch
+          or a word in it, or a session name. Waves are the "## " sections holding session blocks.
 
 Exit codes: 0 ok, 1 problems found, 2 usage error. Standard library only.
 """
@@ -294,6 +300,127 @@ def status(sessions_text, task_files, mapping, use_jira):
     return rows, drift
 
 
+WAVE_NO = re.compile(r"^(?:wave[\s\-]*|w)?(\d+)$", re.I)
+
+
+def sections(text):
+    """[{title, sessions}] for every "## " section (outside fences) that holds session blocks. Each
+    session: {step, name, key, summary, depends_on, parallel_with, branch, close}. The meta lines
+    (Depends on, Branch, Parallel with) are read from everything between the heading and the
+    prompt's fence, so a meta line wrapped over two lines still parses."""
+    out, chunk, title, fence = [], [], None, False
+
+    def flush():
+        if title is None:
+            return
+        body = "\n".join(chunk)
+        found = []
+        for sid, head, _, _, key in blocks(body):
+            lines = body.splitlines()
+            i = lines.index(head) + 1
+            meta = []
+            while i < len(lines) and not lines[i].startswith(("```", "### ", "## ")):
+                meta.append(lines[i].strip())
+                i += 1
+            meta = " ".join(meta)
+            step = re.match(r"^###\s+(\d+)\.", head)
+            summary = re.match(r"^###\s+(?:\d+\.\s+)?`?[^\s`]+`?\s+[—·]\s+(.*?)(?:\s+·\s+[A-Z][A-Z0-9]+-\d+)?$", head)
+            branch = re.search(r"Branch:\s*`?(wave/[^`\s*]+?)`?\.?(?:[\s*]|$)", meta)
+            found.append({
+                "step": int(step.group(1)) if step else None, "name": sid, "key": key,
+                "summary": summary.group(1) if summary else "",
+                "depends_on": _names(re.search(r"Depends on:\s*([^.]*)", meta)),
+                "parallel_with": _names(re.search(r"Parallel with:\s*([^.]*)", meta)),
+                "branch": branch.group(1) if branch else None, "close": sid.startswith("close-")})
+        if found:
+            out.append({"title": title, "sessions": found})
+
+    for line in text.splitlines():
+        if line.startswith("```"):
+            fence = not fence
+        if not fence and line.startswith("## "):
+            flush()
+            title, chunk = line[3:].strip(), []
+            continue
+        chunk.append(line)
+    flush()
+    return out
+
+
+def _names(m):
+    return [x.strip().strip("`") for x in m.group(1).split(",")
+            if x.strip() and x.strip().lower() not in ("none", "nothing", "—", "-")] if m else []
+
+
+def find_wave(secs, arg):
+    """(index, error): the section a wave argument names."""
+    a = arg.strip()
+    def branches(sec):
+        return {s["branch"] for s in sec["sessions"] if s["branch"]}
+    m = WAVE_NO.match(a)
+    if m:
+        n = int(m.group(1))
+        hits = [i for i, s in enumerate(secs) if re.match(rf"^Wave\s+{n}\b", s["title"], re.I)]
+        if not hits and n == 0 and secs:
+            hits = [0]
+        return (hits[0], None) if hits else (None, f"no 'Wave {n}' section")
+    tiers = [
+        [i for i, s in enumerate(secs) if a in branches(s)],
+        [i for i, s in enumerate(secs) if re.search(rf"\b{re.escape(a)}", s["title"], re.I)],
+        [i for i, s in enumerate(secs) if any(re.search(rf"[/\-]{re.escape(a)}(?:-|$)", b, re.I) for b in branches(s))],
+        [i for i, s in enumerate(secs) if any(x["name"] == a for x in s["sessions"])],
+    ]
+    for hits in tiers:
+        if len(hits) == 1:
+            return hits[0], None
+        if len(hits) > 1:
+            return None, f"'{a}' matches several waves: " + "; ".join(secs[i]["title"] for i in hits)
+    return None, f"no wave matches '{a}'"
+
+
+def dependency_order(sessions):
+    """Names in dependency order within the wave (ties by step order); dependencies outside the
+    wave are ignored here. Raises ValueError on a cycle."""
+    names = [s["name"] for s in sessions]
+    deps = {s["name"]: [d for d in s["depends_on"] if d in names] for s in sessions}
+    order, left = [], list(names)
+    while left:
+        ready = [n for n in left if all(d in order for d in deps[n])]
+        if not ready:
+            raise ValueError(f"dependency cycle among {', '.join(left)}")
+        order.append(ready[0])
+        left.remove(ready[0])
+    return order
+
+
+def wave(sessions_text, arg, task_files=()):
+    secs = sections(sessions_text)
+    i, err = find_wave(secs, arg)
+    if err:
+        listing = "; ".join(f"{n}: {s['title']}" for n, s in enumerate(secs))
+        raise LookupError(f"{err}. Waves (by position): {listing}")
+    sec = secs[i]
+    by = {s["name"]: s for s in sec["sessions"]}
+    tasks = {}
+    for f in task_files:
+        for ph in parse_tasks(f):
+            t = tasks.setdefault(ph["id"], [0, 0])
+            t[0] += sum(1 for x in ph["tasks"] if x[1])
+            t[1] += len(ph["tasks"])
+    out = []
+    for name in dependency_order(sec["sessions"]):
+        s = dict(by[name])
+        s["after"] = [d for d in s["depends_on"] if d not in by]
+        if task_files:
+            s["tasks"] = "{}/{}".format(*tasks[name]) if name in tasks else None
+        out.append(s)
+    branches = list(dict.fromkeys(s["branch"] for s in sec["sessions"] if s["branch"]))
+    number = re.match(r"^Wave\s+(\d+)\b", sec["title"], re.I)
+    return {"title": sec["title"], "position": i, "number": int(number.group(1)) if number else None,
+            "branch": branches[0] if branches else None, "branches": branches,
+            "close": [s["name"] for s in out if s["close"]], "sessions": out}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -313,7 +440,20 @@ def main(argv=None):
     s.add_argument("--sessions", required=True)
     s.add_argument("--map", default="docs/delivery/jira-map.json")
     s.add_argument("--jira", action="store_true", help="read ticket status from Jira (needs .env)")
+    w = sub.add_parser("wave")
+    w.add_argument("wave", help="0/foundation, N (Wave N), a title word, the branch, or a session name")
+    w.add_argument("--tasks", nargs="*", default=[], help="tasks.md files, to add ticked/total per session")
+    w.add_argument("--sessions", default="SESSIONS.md")
     a = ap.parse_args(argv)
+
+    if a.cmd == "wave":
+        try:
+            res = wave(pathlib.Path(a.sessions).read_text(), a.wave, a.tasks)
+        except (LookupError, ValueError) as e:
+            print(f"sessionize.py: {e}", file=sys.stderr)
+            return 1
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+        return 0
 
     if a.cmd == "generate":
         sets = dict(x.split("=", 1) for x in a.set if "=" in x)

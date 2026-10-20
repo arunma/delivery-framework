@@ -49,7 +49,7 @@ From step 4 on, every project runs the same steps.
 | Who | Does | Never does |
 | --- | --- | --- |
 | **Owner** | Decides, answers questions, approves the contract, commits and merges | Lets the agent decide a product question |
-| **Engineer** | Runs one session per fresh context, reads each report, checks each step is done | Accepts "done" without pasted output |
+| **Engineer** | Runs one session per fresh context (`/delivery:wave` does this per wave), reads each report, checks each step is done | Accepts "done" without pasted output |
 | **Agent** | Writes the documents, code and tests; moves its own ticket; records every disagreement | Commits, pushes, edits the spec it is building, touches production or real data |
 | **Reviewer agent** | Checks work it did not write | Reads the diff it is judging, or fixes anything |
 
@@ -167,9 +167,12 @@ From step 4 on, every project runs the same steps.
 ## 13 · Run the sessions
 
 - **For:** building one session's slice, proving it, and handing it to the owner staged.
-- **Run:** `/delivery:session <name>` by hand in a fresh context, on the wave's branch
-  (`wave/<closing key>-<wave-name>`); `/delivery:status` to see what is next. CI-driven runs are
-  optional ([PILOT.md](PILOT.md) §9).
+- **Run:** per wave, `/delivery:wave <wave>`: one fresh child agent per session in dependency
+  order, on the wave's branch (`wave/<closing key>-<wave-name>`); it brings each child's questions to
+  you, stops after each session for your commit (`! git commit -m "<KEY>: …"`), runs the close and
+  prints the push and PR commands. Per session (advanced): `/delivery:session <name>` by hand in a
+  fresh context. `/delivery:status` shows what is next. CI-driven runs are optional
+  ([PILOT.md](PILOT.md) §9).
 - **You get:** code and tests written test-first, end-to-end runs (staging, synthetic data), an
   independent check against the contract (`design/parity/NNN.md` or `verification/NNN.md`), a report,
   and the work staged.

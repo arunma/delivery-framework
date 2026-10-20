@@ -5,6 +5,18 @@ All notable changes to the delivery framework plugin. Versions follow [semver](h
 ## Unreleased
 
 ### Added
+- **Wave orchestration**: `/delivery:wave <wave>` (`skills/run-wave`, `commands/wave.md`) runs a
+  whole wave from one conversation. The parent resolves the wave, checks or creates its branch (with
+  the owner's say-so), finds the next session with no commit, and spawns one fresh
+  `session-runner` subagent (`agents/session-runner.md`) per session in dependency order. A child
+  runs the `run-session` loop, ends staged and returns a report of at most 25 lines; it cannot ask
+  the owner, so it returns `NEEDS USER` and the parent asks, then resumes it (SendMessage) or
+  re-spawns it with the answer. The owner commits each session with `! git commit` in the same chat;
+  the parent runs the close and prints the push and PR commands. Re-running it resumes. Optional
+  parallelism only for blocks marked `Parallel with`, opt-in. Guards unchanged.
+- `sessionize.py wave <wave>`: one wave as JSON (title, branch, close sessions, sessions in
+  dependency order with outside dependencies, `Parallel with` and, with `--tasks`, ticked/total),
+  by number, title word, branch or session name; wrapped meta lines parse.
 - `templates/RUN-SHEET.md`: the exact commands per wave (branch, graph, status, each session with
   its review and commit, the wave close, push and PR), a legend, and what to do when a session
   stops short. `tools/runsheet.py` checks that every session appears once and in dependency order.
@@ -16,6 +28,10 @@ All notable changes to the delivery framework plugin. Versions follow [semver](h
   recommendations; "accept all" recorded as one dated section.
 
 ### Changed
+- `templates/RUN-SHEET.md` is the short form: setup, the parent/child diagram, one command per wave,
+  the wave end and troubleshooting. FRAMEWORK step 13, CHECKLIST, PILOT, the SESSIONS and
+  constitution templates: per wave `/delivery:wave`, per session (advanced) `/delivery:session`;
+  one fresh child agent (or session) per session.
 - "Atlas" is now **screen map** (every screen as a clickable mockup with its links in and out),
   everywhere: the skills `screen-map` and `specify-from-contract`, `tools/screen-map-starter/`
   with `build_screen_map.py`, and the paths `design/screen-map/` and `design/screen-map-src/`. The
