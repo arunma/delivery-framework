@@ -33,5 +33,5 @@ check the profile (phase `wave-close`). Wave: `$ARGUMENTS`.
 
 Report the pasted outputs, the sweep's results, the proposals waiting on the owner, the not-done
 list, the seams, the learning-loop proposals and the staged files. Then ask. The owner commits this
-session like the others (`git log --oneline main..<wave branch>` shows one commit per session, each
+session like the others (`git log --oneline <base>..<wave branch>` (base: `base_branch` in `.delivery/profile.json`, default `main`) shows one commit per session, each
 with its key), then pushes the wave branch once and opens one pull request for the wave.

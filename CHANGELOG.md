@@ -2,7 +2,12 @@
 
 All notable changes to the delivery framework plugin. Versions follow [semver](https://semver.org/).
 
-## Unreleased
+## 0.2.0 (2026-10-20)
+
+### Added
+- `base_branch` in `.delivery/profile.json` (default `main`): `/delivery:wave` branches waves from it,
+  prints PRs against it, and the run sheet template uses it, so a long-lived integration branch keeps
+  in-progress work off `main`.
 
 ### Added
 - **Wave orchestration**: `/delivery:wave <wave>` (`skills/run-wave`, `commands/wave.md`) runs a

@@ -34,7 +34,7 @@ flowchart LR
 ```
 
 - **One command per wave**, in a Claude Code session at the repo root. It checks the wave branch
-  (`wave/<closing key>-<wave-name>`, from an up-to-date main; it offers to create or switch to it),
+  (`wave/<closing key>-<wave-name>`, from an up-to-date base branch (`base_branch` in `.delivery/profile.json`, default `main`); it offers to create or switch to it),
   shows done / next / remaining, and runs each session in a fresh child agent, in dependency order.
 - **Questions come to you.** A child that needs a decision stops; the parent asks you and passes
   the answer back. Don't let it decide product questions.
@@ -79,11 +79,11 @@ After: widgets-domain, widgets-screens. The wave's close, run last by the same c
 The parent prints these after the close; run them yourself:
 
 ```
-! git log --oneline main..wave/<KEY>-NN-wave-1   # one commit per session, each with its key
+! git log --oneline <base>..wave/<KEY>-NN-wave-1   # one commit per session, each with its key
 ! git push -u origin wave/<KEY>-NN-wave-1
-! gh pr create --base main --head wave/<KEY>-NN-wave-1 --title "<wave title>" --body "<keys>"
+! gh pr create --base <base> --head wave/<KEY>-NN-wave-1 --title "<wave title>" --body "<keys>"
 # review the PR, merge it, then:
-! git switch main && git pull
+! git switch <base> && git pull
 ```
 
 ## Troubleshooting

@@ -66,3 +66,6 @@ and open items. The SessionStart hook shows it at the start of every session.
 `tier` in the profile sets how much of the pipeline runs: **S** = ticket → test-first change → PR,
 **M** = a spec and a plan, then one session, **L** = the full pipeline with waves. A skill whose phase
 is off for the tier says so; the `tiering` skill re-classifies when the work turns out bigger.
+
+- `base_branch` in `.delivery/profile.json` (default `main`): the branch waves start from and their PRs
+  target. Set it to a long-lived integration branch to keep in-progress work off `main` until a final PR.

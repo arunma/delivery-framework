@@ -36,9 +36,13 @@ or `branches` has more than one entry (ask which).
 
 ## 2. Check the branch
 
+The **base branch** is `base_branch` in `.delivery/profile.json`, default `main`. A project that keeps
+long work off `main` (e.g. a long-lived `ui-revamp` branch) sets it there; waves branch from it and
+their PRs target it.
+
 `git branch --show-current`. If it is not the wave's branch, ask (AskUserQuestion): switch to it
-(it exists: `git rev-parse --verify <branch>`), create it from an up-to-date main
-(`git switch main && git pull --ff-only && git switch -c <branch>`), or stop. Uncommitted changes
+(it exists: `git rev-parse --verify <branch>`), create it from an up-to-date base branch
+(`git switch <base> && git pull --ff-only && git switch -c <branch>`), or stop. Uncommitted changes
 travel with a switch: show `git status --short` and ask before switching.
 
 ## 3. Find what is done and show the plan
@@ -103,9 +107,9 @@ follows the block with the `wave-close` skill. A section with no close session s
 print, for the owner to run, never run them yourself:
 
 ```
-! git log --oneline main..<branch>
+! git log --oneline <base>..<branch>
 ! git push -u origin <branch>
-! gh pr create --base main --head <branch> --title "<wave title>" --body "<every key in the wave>"
+! gh pr create --base <base> --head <branch> --title "<wave title>" --body "<every key in the wave>"
 ```
 
 ## Report

@@ -1,7 +1,7 @@
 {
   "name": "delivery",
   "displayName": "Delivery framework",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Assess a project, draw or write its contract (screen map, API, data, CLI, infra or eval set), then specify, plan and run agent-sized sessions with evidence, independent verification and owner-only commits.",
   "author": {
     "name": "Delivery framework contributors"
